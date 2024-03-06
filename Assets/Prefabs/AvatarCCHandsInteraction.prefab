@@ -2827,7 +2827,7 @@ MonoBehaviour:
   DefaultHandPose: {fileID: 11400000, guid: a0f8cb64bdf9fa545a1a2cb91f016313, type: 2}
   CurrentHandPose: {fileID: 0}
   handness: 1
-  FingerTracking: 0
+  FingerTracking: 2
   FingerAnimationMask: 0
   FingerRoot:
   - {fileID: 7833679823052656449}
@@ -2989,7 +2989,7 @@ MonoBehaviour:
   DefaultHandPose: {fileID: 11400000, guid: a0f8cb64bdf9fa545a1a2cb91f016313, type: 2}
   CurrentHandPose: {fileID: 0}
   handness: 2
-  FingerTracking: 0
+  FingerTracking: 2
   FingerAnimationMask: 0
   FingerRoot:
   - {fileID: 7833679822140727936}

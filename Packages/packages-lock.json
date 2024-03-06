@@ -263,7 +263,7 @@
       "url": "https://vrbooking.irisa.fr/npm"
     },
     "fr.inria.avatar.avatar-ready": {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -280,7 +280,7 @@
         "com.unity.textmeshpro": "2.1.6",
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
-      "hash": "24fbf9d04635fbfe7d30c44f8fe55de73247b7a6"
+      "hash": "6a157b24644b7f8dafc25c6dc1d89461c50783cc"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
