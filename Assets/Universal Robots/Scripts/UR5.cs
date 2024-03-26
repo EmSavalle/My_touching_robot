@@ -27,9 +27,10 @@ public class UR5 : MonoBehaviour
 
 	public Transform targetObject;
 
-	Transform[] joints;
+	public Transform[] joints;
 
-	Quaternion[] joints_init;
+	public Quaternion[] joints_init;
+
 
 	Transform tcp;
 

@@ -571,7 +571,7 @@ public class UR_Manager
     URFrameRealTime ParseFrameRealTime(byte[] raw)
     {
         URFrameRealTime f = new URFrameRealTime();
-        Debug.Log("parsing frame " + raw.Length);
+        //Debug.Log("parsing frame " + raw.Length);
         if (raw.Length > 1000) { 
             BinaryReaderBigEndian reader = new BinaryReaderBigEndian(new MemoryStream(raw));
 
