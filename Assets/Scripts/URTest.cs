@@ -69,6 +69,7 @@ public class URTest : MonoBehaviour
     private bool isRobotAligned = false;
     public bool instantiateTarget = false;
 
+    public float tableYOffset = 0f;
     public bool calibrateHand;
     private bool calibratingHand = false;
     private GameObject leftHand, rightHand;
@@ -148,6 +149,8 @@ public class URTest : MonoBehaviour
     public GameObject robotRig;
     public GameObject ballRig;
     public GameObject fakeRig;
+
+
 
     /*public bool robotMoved = false;
 public bool avatarMoved = false;
@@ -397,12 +400,12 @@ public bool leapMoved = false;*/
             isRobotAligned = true;
 
         }
-        else if (mode == "Avatar")
+        /*else if (mode == "Avatar")
         {
-            // Move the robot so the right hand model lign up with the physical alignement point
+            // Move the unity scene so the right hand model lign up with the physical alignement point
 
-            actualAlignment = alignmentPointAvatar.transform.Find("AvatarCCHandsInteractionLeap(Clone)/LeftHand/Tracked Root L Hand").gameObject;
-            if(actualAlignment == null)
+            actualAlignment = alignmentPointAvatar.transform.Find("AvatarCCHandsInteractionLeap(Clone)/LeftHand/Tracked Root L Hand/L Hand/CC_Base_L_Middle1").gameObject;
+            if (actualAlignment == null)
             {
                 Debug.LogError("No right hand found");
             }
@@ -411,6 +414,25 @@ public bool leapMoved = false;*/
             foreach (GameObject go in movableAvatar)
             {
                 go.transform.position += offset;
+            }
+            isAvatarAligned = true;
+
+        }*/
+        else if (mode == "AvatarHand" || mode == "Avatar")
+        {
+            // Move the unity scene so the right hand model lign up with the physical alignement point
+
+            actualAlignment = alignmentPointAvatar.transform.Find("AvatarCCHandsInteractionLeap(Clone)/LeftHand/Tracked Root L Hand/L Hand/CC_Base_L_Middle1").gameObject;
+            if (actualAlignment == null)
+            {
+                Debug.LogError("No left hand found");
+            }
+            Vector3 offset = alignment.transform.position - actualAlignment.transform.position;
+            offset.x = 0;offset.z = 0;
+            offset.y += tableYOffset;
+            foreach (GameObject go in movableAvatar)
+            {
+                go.transform.position -= offset;
             }
             isAvatarAligned = true;
 
@@ -424,25 +446,30 @@ public bool leapMoved = false;*/
                     String Go = alignmentPointAvatar.transform.GetChild(i).name;
                     if (Go.Contains("AvatarCCHandsInteractionLeap"))
                     {
-                        actualAlignmentPointLeap = alignmentPointAvatar.transform.GetChild(i).transform.Find("LeftHand/Physical Root L Hand").gameObject;
+                        actualAlignmentPointLeap = alignmentPointAvatar.transform.GetChild(i).transform.Find("LeftHand/Tracked Root L Hand/L Hand/CC_Base_L_Middle1").gameObject;
                     }
                 }
             }
-            Vector3 localPosition = actualAlignmentPointLeap.transform.localPosition;
-            Vector3 globalPosition = actualAlignmentPointLeap.transform.TransformPoint(localPosition);
 
-            Vector3 offset = alignment.transform.position - actualAlignmentPointLeap.transform.position;
-            offset.x += offsetHandx;
-            offset.y += offsetHandy;
-            offset.z += offsetHandz;
 
-            float zz = offset.x;
-            offset.x = -offset.z;
-            offset.z = zz;
+           
             foreach (GameObject go in movableLeap)
             {
+                // Rotate the object to align with global forward
+                //go.transform.rotation = targetRotation;
+
+                // Calculate the position offset
+                Vector3 offset = alignment.transform.position - actualAlignmentPointLeap.transform.position;
+                offset.x += offsetHandx;
+                offset.y += offsetHandy;
+                offset.z += offsetHandz;
+
+                // Apply the offset to the position
                 go.transform.position += offset;
             }
+
+            // Set the alignment flag to true
+            align("AvatarHand");
             isLeapAligned = true;
         }
     }
