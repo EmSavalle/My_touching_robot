@@ -17,7 +17,7 @@ public class SphereSquish : MonoBehaviour
         // Store the original scale of the sphere
         originalScale = transform.localScale;
         // Calculate the squished scale based on the squish amount
-        squishedScale = originalScale - Vector3.up * squishAmount;
+        squishedScale = originalScale - Vector3.right * squishAmount;
         originSquishSpeed = squishSpeed;
     }
 
@@ -39,7 +39,7 @@ public class SphereSquish : MonoBehaviour
         {
             StopCoroutine(squishCoroutine); // Stop previous coroutine if running
         }
-        squishSpeed *= 2;
+        squishSpeed = originSquishSpeed / 2;
         squishCoroutine = StartCoroutine(SquishSmooth(transform.localScale, originalScale));
     }
 
