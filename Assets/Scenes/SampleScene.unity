@@ -12854,6 +12854,7 @@ MonoBehaviour:
   goSafe: 0
   goHover: 0
   move: 0
+  movementTime: 1
   npx: 0
   npy: 0
   npz: 0
@@ -16904,15 +16905,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2141516068}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ccb622f416f9934cac4dc60c056199e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loadOnPlay: 1
   AssetBundleName: Adult_Female10
-  overrideGalleryURL: 1
-  galleryURL: 
+  overrideGalleryURL: 0
+  galleryURL: https://avatar-gallery.irisa.fr/
 --- !u!114 &2141516073
 MonoBehaviour:
   m_ObjectHideFlags: 0

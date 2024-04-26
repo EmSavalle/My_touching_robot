@@ -218,16 +218,16 @@ public bool leapMoved = false;*/
         //ldevice = leftHandDevices[0];
         //rdevice = rightHandDevices[0];
         //Swapped y and z to correspond to robot space
-        npx = ((int)(target.transform.position.x * 100) / 100.0);
-        npz = ((int)(target.transform.position.y * 100) / 100.0);
-        npy = ((int)(target.transform.position.z * 100) / 100.0);
+        npx = ((int)(target.transform.position.x * 1000) / 1000.0);
+        npz = ((int)(target.transform.position.y * 1000) / 1000.0);
+        npy = ((int)(target.transform.position.z * 1000) / 1000.0);
         Transform transform = robotObject.transform;
         double offsetx = transform.position.x;
         double offsety = transform.position.z;
         double offsetz = transform.position.y;
-        npx = npx - ((int)(offsetx * 100) / 100.0);
-        npy = npy - ((int)(offsety * 100) / 100.0);
-        npz = npz - ((int)(offsetz * 100) / 100.0);
+        npx = npx - ((int)(offsetx * 1000) / 1000.0);
+        npy = npy - ((int)(offsety * 1000) / 1000.0);
+        npz = npz - ((int)(offsetz * 1000) / 1000.0);
 
         // Define the desired rotation in Euler angles
         Vector3 desiredEulerAngles = new Vector3(180f, 0f, 0f); // Example: Rotate 180 degrees around the y-axis
@@ -245,25 +245,25 @@ public bool leapMoved = false;*/
         {
             // Get info from robot
             double[] forces = robot.GetTCPForce();
-            Fx = ((int)(forces[0] * 100) / 100.0);
-            Fy = ((int)(forces[1] * 100) / 100.0);
-            Fz = ((int)(forces[2] * 100) / 100.0);
-            Mx = ((int)(forces[3] * 100) / 100.0);
-            My = ((int)(forces[4] * 100) / 100.0);
-            Mz = ((int)(forces[5] * 100) / 100.0);
+            Fx = ((int)(forces[0] * 1000) / 1000.0);
+            Fy = ((int)(forces[1] * 1000) / 1000.0);
+            Fz = ((int)(forces[2] * 1000) / 1000.0);
+            Mx = ((int)(forces[3] * 1000) / 1000.0);
+            My = ((int)(forces[4] * 1000) / 1000.0);
+            Mz = ((int)(forces[5] * 1000) / 1000.0);
 
             forces = robot.GetTCPSpeed();
-            Sx = ((int)(forces[0] * 100) / 100.0);
-            Sy = ((int)(forces[1] * 100) / 100.0);
-            Sz = ((int)(forces[2] * 100) / 100.0);
-            Ssx = ((int)(forces[3] * 100) / 100.0);
-            Ssy = ((int)(forces[4] * 100) / 100.0);
-            Ssz = ((int)(forces[5] * 100) / 100.0);
+            Sx = ((int)(forces[0] * 1000) / 1000.0);
+            Sy = ((int)(forces[1] * 1000) / 1000.0);
+            Sz = ((int)(forces[2] * 1000) / 1000.0);
+            Ssx = ((int)(forces[3] * 1000) / 1000.0);
+            Ssy = ((int)(forces[4] * 1000) / 1000.0);
+            Ssz = ((int)(forces[5] * 1000) / 1000.0);
 
             double[] pos = robot.GetTCPPosition();
-            x = ((int)(pos[0] * 100) / 100.0);
-            y = ((int)(pos[1] * 100) / 100.0);
-            z = ((int)(pos[2] * 100) / 100.0);
+            x = ((int)(pos[0] * 1000) / 1000.0);
+            y = ((int)(pos[1] * 1000) / 1000.0);
+            z = ((int)(pos[2] * 1000) / 1000.0);
             /*Vector3 robotToUnity = new Vector3((float)x, (float)y, (float)z);
             robotToUnity = robot.ur.PoseTToVector3(robotToUnity);
             robotUnityX = robotToUnity.x;
@@ -494,23 +494,23 @@ public bool leapMoved = false;*/
         double dx, dy, dz;
         if (offset)
         {
-            dx = ((int)((to.x + targetOffsetx) * 100) / 100.0);
-            dy = ((int)((to.y + targetOffsety) * 100) / 100.0);
-            dz = ((int)((to.z + targetOffsetz) * 100) / 100.0);
+            dx = ((int)((to.x + targetOffsetx) * 1000) / 1000.0);
+            dy = ((int)((to.y + targetOffsety) * 1000) / 1000.0);
+            dz = ((int)((to.z + targetOffsetz) * 1000) / 1000.0);
         }
         else
         {
-            dx = ((int)((to.x) * 100) / 100.0);
-            dy = ((int)((to.y) * 100) / 100.0);
-            dz = ((int)((to.z) * 100) / 100.0);
+            dx = ((int)((to.x) * 1000) / 1000.0);
+            dy = ((int)((to.y) * 1000) / 1000.0);
+            dz = ((int)((to.z) * 1000) / 1000.0);
         }
         Transform transform = robotObject.transform;
         double offsetx = transform.position.x;
         double offsety = transform.position.z;
         double offsetz = transform.position.y;
-        dx = dx - ((int)(offsetx * 100) / 100.0);
-        dy = dy - ((int)(offsety * 100) / 100.0);
-        dz = dz - ((int)(offsetz * 100) / 100.0);
+        dx = dx - ((int)(offsetx * 1000) / 1000.0);
+        dy = dy - ((int)(offsety * 1000) / 1000.0);
+        dz = dz - ((int)(offsetz * 1000) / 1000.0);
         return new Vector3((float)dx, (float)dy, (float)dz);
     }
     public Vector3 transformPosToRobotPosition(Vector3 to)
@@ -521,23 +521,23 @@ public bool leapMoved = false;*/
     public void goTo(GameObject to, Boolean followRotation, float speed)
     {
         //Swapped y and z to correspond to robot space
-        /*npx = ((int)((to.transform.position.x + targetOffsetx) * 100) / 100.0);
-        npz = ((int)((to.transform.position.y + targetOffsety) * 100) / 100.0);
-        npy = ((int)((to.transform.position.z + targetOffsetz) * 100) / 100.0);*/
-        npx = ((int)((to.transform.position.x) * 100) / 100.0);
-        npz = ((int)((to.transform.position.y) * 100) / 100.0);
-        npy = ((int)((to.transform.position.z) * 100) / 100.0);
+        /*npx = ((int)((to.transform.position.x + targetOffsetx) * 1000) / 1000.0);
+        npz = ((int)((to.transform.position.y + targetOffsety) * 1000) / 1000.0);
+        npy = ((int)((to.transform.position.z + targetOffsetz) * 1000) / 1000.0);*/
+        npx = ((int)((to.transform.position.x) * 1000) / 1000.0);
+        npz = ((int)((to.transform.position.y) * 1000) / 1000.0);
+        npy = ((int)((to.transform.position.z) * 1000) / 1000.0);
 
         Transform transform = robotObject.transform;
         double offsetx = transform.position.x;
         double offsety = transform.position.z;
         double offsetz = transform.position.y;
-        npx = npx - ((int)(offsetx * 100) / 100.0);
-        npy = npy - ((int)(offsety * 100) / 100.0);
-        npz = npz - ((int)(offsetz * 100) / 100.0);
-        /*double rpx = ((int)(Mathf.Deg2Rad * -1*(target.transform.rotation.eulerAngles.x-180) * 100) / 100.0);
-        double rpz = ((int)(Mathf.Deg2Rad * target.transform.rotation.eulerAngles.y * 100) / 100.0);
-        double rpy = ((int)(Mathf.Deg2Rad * target.transform.rotation.eulerAngles.z * 100) / 100.0);*/
+        npx = npx - ((int)(offsetx * 1000) / 1000.0);
+        npy = npy - ((int)(offsety * 1000) / 1000.0);
+        npz = npz - ((int)(offsetz * 1000) / 1000.0);
+        /*double rpx = ((int)(Mathf.Deg2Rad * -1*(target.transform.rotation.eulerAngles.x-180) * 1000) / 1000.0);
+        double rpz = ((int)(Mathf.Deg2Rad * target.transform.rotation.eulerAngles.y * 1000) / 1000.0);
+        double rpy = ((int)(Mathf.Deg2Rad * target.transform.rotation.eulerAngles.z * 1000) / 1000.0);*/
 
 
         // Define the desired rotation in Euler angles
@@ -839,12 +839,12 @@ public bool leapMoved = false;*/
     public bool compareVector(Vector3 v1, Vector3 v2)
     {
 
-        double v1x = ((int)((v1.x) * 100) / 100.0);
-        double v1y = ((int)((v1.y) * 100) / 100.0);
-        double v1z = ((int)((v1.z) * 100) / 100.0);
-        double v2x = ((int)((v2.x) * 100) / 100.0);
-        double v2y = ((int)((v2.y) * 100) / 100.0);
-        double v2z = ((int)((v2.z) * 100) / 100.0);
+        double v1x = ((int)((v1.x) * 1000) / 1000.0);
+        double v1y = ((int)((v1.y) * 1000) / 1000.0);
+        double v1z = ((int)((v1.z) * 1000) / 1000.0);
+        double v2x = ((int)((v2.x) * 1000) / 1000.0);
+        double v2y = ((int)((v2.y) * 1000) / 1000.0);
+        double v2z = ((int)((v2.z) * 1000) / 1000.0);
 
         bool ret = ((Math.Abs(v1x - v2x) <= 0.015) && (Math.Abs(v1y - v2y) <= 0.015) && (Math.Abs(v1z - v2z) <= 0.015));
         return ret;
