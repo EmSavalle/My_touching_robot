@@ -18,6 +18,7 @@ public class Scenario : MonoBehaviour
     private float lastSeq;
     bool visu,phy,record;
     private char touchType;
+    public int repetitions;
     public bool replay;
     public GameObject robotRig;
     public GameObject ballRig;
@@ -34,7 +35,8 @@ public class Scenario : MonoBehaviour
     public bool playScenario;
 
 
-
+    public QuestionnaireManager quest;
+    public GameObject questionnaireHolder;
     // Start is called before the first frame update
     void Start()
     {
@@ -231,37 +233,55 @@ public class Scenario : MonoBehaviour
 
             phy = currentSeq[1] == 't';
             touchType = currentSeq[2];
-            switch (touchType)
+            int x1 = currentSeq[currentSeq.Length - 2] - '0';
+            int x2 = currentSeq[currentSeq.Length - 1] - '0';
+            repetitions = 10 * x1 + x2;
+            for (int rep = 0; rep < repetitions; rep ++)
             {
-                case 'n':
-                    tType = "no";
-                    break;
-                case 'l':
-                    tType = "light";
-                    break;
-                case 'h':
-                    tType = "hard";
-                    break;
-                default:
-                    tType = "light";
-                    break;
+
+                switch (touchType)
+                {
+                    case 'n':
+                        tType = "no";
+                        break;
+                    case 'l':
+                        tType = "light";
+                        break;
+                    case 'h':
+                        tType = "hard";
+                        break;
+                    default:
+                        tType = "light";
+                        break;
+                }
+                if(!recordDone.Contains(tType) && phy)
+                {
+                    record = true;
+                }
+                manager.StartMovement(tType, phy, touchTime, record);
+                while (manager.movingCoroutine)
+                {
+                    yield return new WaitForSeconds(Time.deltaTime);
+                }
+                if (record)
+                {
+                    recordDone.Add(tType);
+                }
+
+                yield return new WaitForSeconds(delaySeq);
+
             }
-            if(!recordDone.Contains(tType) && phy)
+            if (!questionnaireHolder.activeSelf)
             {
-                record = true;
+                questionnaireHolder.SetActive(true);
             }
-            manager.StartMovement(tType, phy, touchTime, record);
-            while (manager.movingCoroutine)
+            quest.StartQuestionnaire();
+            while (!quest.finished)
             {
                 yield return new WaitForSeconds(Time.deltaTime);
             }
-            if (record)
-            {
-                recordDone.Add(tType);
-            }
+            questionnaireHolder.SetActive(false);
 
-            yield return new WaitForSeconds(delaySeq);
-            
         }
         playingScenario = false;
         yield break;

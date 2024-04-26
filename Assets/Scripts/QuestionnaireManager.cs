@@ -16,20 +16,23 @@ public class QuestionnaireManager : MonoBehaviour
     private string currQuestion;
     private string currminValue;
     private string currmaxValue;
-
+    public bool finished;
     // Start is called before the first frame update
     void Start()
     {
 
 
         // Add some sample data
-        AddQuestionnaires("Do you like it ?", "No", "Yes");
-        AddQuestionnaires("Button2", "Action2", "Parameter2");
-        AddQuestionnaires("Button3", "Action3", "Parameter3");
+        AddQuestionnaires("How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
         currentQuestions = -1;
         NextQuestion();
     }
-
+    public void StartQuestionnaire()
+    {
+        currentQuestions = -1;
+        NextQuestion();
+        finished = false;
+    }
     void Update()
     {
         foreach (Button b in buttons)
@@ -80,6 +83,10 @@ public class QuestionnaireManager : MonoBehaviour
             currminValue = questionnaires[currentQuestions][1];
             currmaxValue = questionnaires[currentQuestions][2];
             setQuestion();
+        }
+        else
+        {
+            finished = true;
         }
     }
     public void setQuestion()

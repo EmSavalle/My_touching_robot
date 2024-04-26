@@ -6,6 +6,7 @@ using System.Text;
 using System;
 using System.Globalization;
 using UnityEngine.XR;
+using System.Linq;
 public class URTest : MonoBehaviour
 {
 
@@ -25,6 +26,7 @@ public class URTest : MonoBehaviour
     public bool goSafe;
     public bool goHover;
     public bool move = false;
+    public float movementTime = 1;
 
 
 
@@ -83,9 +85,12 @@ public class URTest : MonoBehaviour
     public GameObject noPos, lightPos, hardPos;
     public Vector3 vnoPos, vlightPos, vhardPos;
     public bool setnoPos, setlightPos, sethardPos;
+    public bool calibratePressure;
     private bool hasnoPos, haslightPos, hashardPos;
     private bool manualSet = true;
-
+    public int noPosPressure, lightPosPressure, hardPosPressure;
+    public float safeYPos = 0.85f;
+    public float unsafeYPos = 0.6f;
     [Header("Alignement params")]
     public GameObject alignment;
     public GameObject alignmentPointRobot;
@@ -113,9 +118,9 @@ public class URTest : MonoBehaviour
     public bool testCoroutine;
 
     [Header("Forces & speeds")]
-    private double Fx;
-    private double Fy;
-    private double Fz;
+    public double Fx;
+    public double Fy;
+    public double Fz;
     private double Mx;
     private double My;
     private double Mz;
@@ -139,11 +144,11 @@ public class URTest : MonoBehaviour
 
 
     [Header("Test position")]
-    public bool isAtHard;
-    public bool isAtLight;
-    public bool isAtNo;
-    public bool isAtHover;
-    public bool isAtSafe;
+    private bool isAtHard;
+    private bool isAtLight;
+    private bool isAtNo;
+    private bool isAtHover;
+    private bool isAtSafe;
 
     [Header("Visualisation")]
     public GameObject robotRig;
@@ -309,6 +314,7 @@ public bool leapMoved = false;*/
             {
                 defHover();
                 hoverPos = false;
+                target.transform.position = hoverSpace.transform.position;
             }
             if (goSafe)
             {
@@ -324,7 +330,12 @@ public bool leapMoved = false;*/
         {
             target.transform.position = Vector3.Lerp(baseHand.transform.position, baseMiddle.transform.position, 0.5f)+new Vector3(targetOffsetx, targetOffsety, targetOffsetz);
         }
-        if (sethardPos)
+        if (calibratePressure)
+        {
+            StartCoroutine(DetermineTouchPressure());
+            calibratePressure = false;
+        }
+        /*if (sethardPos)
         {
             sethardPos = false;
             defPos("Hard");
@@ -338,19 +349,8 @@ public bool leapMoved = false;*/
         {
             setnoPos = false;
             defPos("No");
-        }
-        if (hashardPos)
-        {
-            hardPos.transform.position = baseMiddle.transform.position - vhardPos;
-        }
-        if (haslightPos)
-        {
-            lightPos.transform.position = baseMiddle.transform.position - vlightPos;
-        }
-        if (hasnoPos)
-        {
-            noPos.transform.position = baseMiddle.transform.position - vnoPos;
-        }
+        }*/
+
         if (alignRobot)
         {
             Debug.Log("Aligning robot");
@@ -469,7 +469,7 @@ public bool leapMoved = false;*/
             }
 
             // Set the alignment flag to true
-            align("AvatarHand");
+            //align("AvatarHand");
             isLeapAligned = true;
         }
     }
@@ -573,7 +573,7 @@ public bool leapMoved = false;*/
                 {
                     string prog = "movel(p[" + npx.ToString(CultureInfo.InvariantCulture) + "," + npy.ToString(CultureInfo.InvariantCulture) + "," + npz.ToString(CultureInfo.InvariantCulture) + "," + rpx.ToString(CultureInfo.InvariantCulture) + "," + rpy.ToString(CultureInfo.InvariantCulture) + "," + rpz.ToString(CultureInfo.InvariantCulture) + "], a = 1.4, v ="+speed.ToString(CultureInfo.InvariantCulture) +", t = 0, r = 0)" + "\n";
                     lastMove = DateTime.Now;
-                    Debug.Log(prog);
+                    //Debug.Log(prog);
                     robot.ur.SendProgram(prog);
                     
                     
@@ -613,29 +613,41 @@ public bool leapMoved = false;*/
     {
         if (pos == "No")
         {
-            baseHand = alignmentPointAvatar.transform.Find("Adult_Female10/CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle/CC_Base_L_Upperarm/CC_Base_L_Forearm/CC_Base_L_Hand").gameObject;
+            /*baseHand = alignmentPointAvatar.transform.Find("Adult_Female10/CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle/CC_Base_L_Upperarm/CC_Base_L_Forearm/CC_Base_L_Hand").gameObject;
             baseMiddle = baseHand.transform.Find("CC_Base_L_Mid1").gameObject;
-            vnoPos = baseMiddle.transform.position - alignmentPointRobot.transform.position;
-            noPos = Instantiate(instTarget);
-            noPos.transform.position = baseMiddle.transform.position - vnoPos;
+            vnoPos = baseMiddle.transform.position - alignmentPointRobot.transform.position;*/
+            if (noPos == null)
+            {
+                noPos = Instantiate(instTarget);
+            }
+            //noPos.transform.position = baseMiddle.transform.position - vnoPos;
+            noPos.transform.position = alignmentPointRobot.transform.position;
             hasnoPos = true;
         }
         else if (pos == "Light")
         {
-            baseHand = alignmentPointAvatar.transform.Find("Adult_Female10/CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle/CC_Base_L_Upperarm/CC_Base_L_Forearm/CC_Base_L_Hand").gameObject;
+            /*baseHand = alignmentPointAvatar.transform.Find("Adult_Female10/CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle/CC_Base_L_Upperarm/CC_Base_L_Forearm/CC_Base_L_Hand").gameObject;
             baseMiddle = baseHand.transform.Find("CC_Base_L_Mid1").gameObject;
-            vlightPos = baseMiddle.transform.position - alignmentPointRobot.transform.position;
-            lightPos = Instantiate(instTarget);
-            lightPos.transform.position = baseMiddle.transform.position - vlightPos;
+            vlightPos = baseMiddle.transform.position - alignmentPointRobot.transform.position;*/
+            if (lightPos == null)
+            {
+                lightPos = Instantiate(instTarget);
+            }
+            //lightPos.transform.position = baseMiddle.transform.position - vlightPos;
+            lightPos.transform.position = alignmentPointRobot.transform.position;
             haslightPos = true;
         }
         else if (pos == "Hard")
         {
-            baseHand = alignmentPointAvatar.transform.Find("Adult_Female10/CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle/CC_Base_L_Upperarm/CC_Base_L_Forearm/CC_Base_L_Hand").gameObject;
+            /*baseHand = alignmentPointAvatar.transform.Find("Adult_Female10/CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle/CC_Base_L_Upperarm/CC_Base_L_Forearm/CC_Base_L_Hand").gameObject;
             baseMiddle = baseHand.transform.Find("CC_Base_L_Mid1").gameObject;
-            vhardPos = baseMiddle.transform.position - alignmentPointRobot.transform.position;
-            hardPos = Instantiate(instTarget);
-            hardPos.transform.position = baseMiddle.transform.position - vhardPos;
+            vhardPos = baseMiddle.transform.position - alignmentPointRobot.transform.position;*/
+            if (hardPos == null)
+            {
+                hardPos = Instantiate(instTarget);
+            }
+            //hardPos.transform.position = baseMiddle.transform.position - vhardPos;
+            hardPos.transform.position = alignmentPointRobot.transform.position;
             hashardPos = true;
         }
         hoverSpace.transform.position = actuator.transform.position;
@@ -702,6 +714,9 @@ public bool leapMoved = false;*/
             case "light":
                 target = lightPos;
                 break;
+            case "hard":
+                target = hardPos;
+                break;
             default:
                 target = hardPos;
                 break;
@@ -741,7 +756,10 @@ public bool leapMoved = false;*/
         {
             if (record && physical)
             {
-                fake.StartRecording(type);
+                if((type == "no" && fake.recordedPositionsNo.Count == 0 ) || (type == "light" && fake.recordedPositionsLight.Count == 0) || (type == "hard" && fake.recordedPositionsHard.Count == 0))
+                {
+                    fake.StartRecording(type);
+                }
             }
             moveCouroutineStep = "Touch";
             while (!isAtPos(target, false))
@@ -873,5 +891,97 @@ public bool leapMoved = false;*/
 
         //rpos = new Vector3((float)actuator.transform.position.x, (float)actuator.transform.position.y, (float)actuator.transform.position.z);
         return isAtPos(target, false);
+    }
+
+    public IEnumerator DetermineTouchPressure()
+    {
+        //hardPos; lightPos; noPos;
+        float currentHeight = safeYPos;
+        double pressure = 0;
+
+        float noY = -1;
+        float lightY = -1;
+        float hardY = -1;
+        Vector3 originHover = hoverSpace.transform.position;
+        Vector3 targetPos = originHover;
+        targetPos.y = currentHeight;
+        target.transform.position = targetPos;
+        move = true;
+
+        while (! isAtPos(target.transform.position, false))
+        {
+            Debug.Log("Going target1");
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+
+        while((noY == -1 || lightY == -1 || hardY == -1) && currentHeight > unsafeYPos)
+        {
+            //Return to hover pos
+            targetPos = originHover;
+            targetPos.y = safeYPos;
+            target.transform.position = targetPos;
+            move = true;
+
+            while (!isAtPos(target.transform.position, false))
+            {
+                Debug.Log("Going hover");
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+
+            //lower target pos and go there
+            currentHeight -= 0.001f;
+            targetPos = originHover;
+            targetPos.y = currentHeight;
+            target.transform.position = targetPos;
+            while (!isAtPos(target.transform.position, false))
+            {
+                Debug.Log("Going target2");
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            //Wait a second and check pressure
+            yield return new WaitForSeconds(2);
+            List<double> pres = new List<double>() ;
+            for (int r = 0; r < 10; r++)
+            {
+                pres.Add(Fz);
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            
+            pressure = pres.Average();
+            if (pressure < 10)
+            {
+                noY = currentHeight;
+                defPos("No");
+            }
+            if(pressure>15 && lightY == -1)
+            {
+                lightY = currentHeight;
+                defPos("Light");
+            }
+            if(pressure>25 && hardY == -1)
+            {
+                hardY = currentHeight;
+                defPos("Hard");
+            }
+        }
+        target.transform.position = originHover;
+        while (!isAtPos(target.transform.position, false))
+        {
+            Debug.Log("Going target2");
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        Vector3 towardHover = new Vector3(originHover.x, originHover.y + 0.1f, originHover.z);
+        yield return new WaitForSeconds(movementTime);
+        hoverSpace.transform.position = new Vector3(alignmentPointRobot.transform.position.x, alignmentPointRobot.transform.position.y, alignmentPointRobot.transform.position.z);
+                
+        move = false;
+        goHover = true;
+        while (!isAtPos(hoverSpace.transform.position, false))
+        {
+            Debug.Log("Going target2");
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+
+        yield break;
     }
 }

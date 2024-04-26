@@ -1,3 +1,7 @@
 Do you like it ?:0
 Button2:0
 Button3:3
+How coherent were the physical and visual stimulation?:1
+How coherent were the physical and visual stimulation?:2
+How coherent were the physical and visual stimulation?:0
+How coherent were the physical and visual stimulation?:0
