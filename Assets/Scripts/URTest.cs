@@ -982,6 +982,7 @@ public bool leapMoved = false;*/
             yield return new WaitForSeconds(Time.deltaTime);
         }
 
+        goHover = false;
         yield break;
     }
 }
