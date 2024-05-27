@@ -25,6 +25,13 @@ public class Button : MonoBehaviour
             touched();
         }
     }
+    public void reset()
+    {
+        touching = false;
+        selected = false;
+        unselected();
+        untouched();
+    }
     public void touched()
     {
         if (!touching)

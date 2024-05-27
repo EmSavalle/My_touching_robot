@@ -78,6 +78,9 @@ public class URTest : MonoBehaviour
 
 
     [Header("Robot positions")]
+    public GameObject handTouchPos;
+    private GameObject locationBase, locationMid;
+
     public bool safePos;
     private bool hassafePos;
     public bool hoverPos;
@@ -143,12 +146,6 @@ public class URTest : MonoBehaviour
     private bool isTargetInstantiated;
 
 
-    [Header("Test position")]
-    private bool isAtHard;
-    private bool isAtLight;
-    private bool isAtNo;
-    private bool isAtHover;
-    private bool isAtSafe;
 
     [Header("Visualisation")]
     public GameObject robotRig;
@@ -171,20 +168,7 @@ public bool leapMoved = false;*/
     // Update is called once per frame
     void Update()
     {
-        if (hardPos != null)
-        {
-            isAtHard = isAtPos(hardPos.transform.position, false);
-        }
-        if (lightPos != null)
-        {
-            isAtLight = isAtPos(lightPos.transform.position, false);
-        }
-        if (noPos != null)
-        {
-            isAtNo = isAtPos(noPos.transform.position, false);
-        }
-        isAtHover = isAtPos(hoverSpace.transform.position, false);
-        isAtSafe = isAtPos(safeSpace.transform.position, false);
+        updateHandTouchPos();
         if (testCoroutine)
         {
             testCoroutine = false; 
@@ -214,7 +198,6 @@ public bool leapMoved = false;*/
         var rightHandDevices = new List<UnityEngine.XR.InputDevice>();
         UnityEngine.XR.InputDevices.GetDevicesAtXRNode(UnityEngine.XR.XRNode.LeftHand, leftHandDevices);
         UnityEngine.XR.InputDevices.GetDevicesAtXRNode(UnityEngine.XR.XRNode.RightHand, rightHandDevices);
-        UnityEngine.XR.InputDevice ldevice, rdevice;
         //ldevice = leftHandDevices[0];
         //rdevice = rightHandDevices[0];
         //Swapped y and z to correspond to robot space
@@ -391,7 +374,7 @@ public bool leapMoved = false;*/
         if(mode == "Robot")
         {
             // Move the robot so the tcp object lign up with the physical alignement point
-            Vector3 offset = alignment.transform.position - alignmentPointRobot.transform.Find("AlignementPointRobot").transform.position;
+            Vector3 offset = handTouchPos.transform.position - alignmentPointRobot.transform.Find("AlignementPointRobot").transform.position;
 
             foreach (GameObject go in movableRobot)
             {
@@ -471,9 +454,42 @@ public bool leapMoved = false;*/
             // Set the alignment flag to true
             //align("AvatarHand");
             isLeapAligned = true;
+
+            // Defining contact point on hand
+            defineHandTouchPos();
         }
     }
+    public void defineHandTouchPos()
+    {
+        if (handTouchPos == null)
+        {
 
+            for (int i = 0; i < alignmentPointAvatar.transform.childCount; i++)
+            {
+                String Go = alignmentPointAvatar.transform.GetChild(i).name;
+                if (Go.Contains("AvatarCCHandsInteractionLeap"))
+                {
+                    locationBase = alignmentPointAvatar.transform.GetChild(i).transform.Find("LeftHand/Tracked Root L Hand/L Hand").gameObject;
+                    locationMid = alignmentPointAvatar.transform.GetChild(i).transform.Find("LeftHand/Tracked Root L Hand/L Hand/CC_Base_L_Middle1").gameObject;
+                }
+            }
+            handTouchPos = Instantiate(new GameObject("HandTouch"));
+        }
+        float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) / 2;
+        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.015f;
+        float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) / 2;
+        handTouchPos.transform.position = new Vector3(x, y, z);
+    }
+    public void updateHandTouchPos()
+    {
+        if(handTouchPos != null)
+        {
+            float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) / 2;
+            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.015f;
+            float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) / 2;
+            handTouchPos.transform.position = new Vector3(x, y, z);
+        }
+    }
     void RotateRobotsAroundTarget(GameObject robot, GameObject target, float angleY)
     {
         Vector3 rotationAxis = Vector3.up;
@@ -929,7 +945,7 @@ public bool leapMoved = false;*/
             }
 
             //lower target pos and go there
-            currentHeight -= 0.001f;
+            currentHeight -= 0.002f;
             targetPos = originHover;
             targetPos.y = currentHeight;
             target.transform.position = targetPos;

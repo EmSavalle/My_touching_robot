@@ -9,6 +9,7 @@ public class QuestionnaireManager : MonoBehaviour
     public Infos info;
     public Button[] buttons;
     public Button confirm;
+    public VRSlider slider;
     public TextMeshProUGUI questionnaire, minanswer, maxanswer;
     public int selected;
     public int currentQuestions;
@@ -65,18 +66,28 @@ public class QuestionnaireManager : MonoBehaviour
             {
                 b2.unselected();
             }
-            confirm.unselected();
+            confirm.reset();
+            slider.reset();
+            selected = -1;
+            NextQuestion();
+        }
+        else if(slider.percentage != -1)
+        {
+            writeAnswer(questionnaires[currentQuestions][0], slider.percentage);
+            confirm.reset();
+            slider.reset();
             selected = -1;
             NextQuestion();
         }
         else
         {
-            confirm.unselected();
+            confirm.reset();
         }
     }
     public void NextQuestion()
     {
         currentQuestions += 1;
+        selected = -1;
         if (currentQuestions < questionnaires.Count)
         {
             currQuestion = questionnaires[currentQuestions][0];
@@ -111,10 +122,26 @@ public class QuestionnaireManager : MonoBehaviour
 
     private void writeAnswer(string questname, int value)
     {
-        
+
         using (StreamWriter writer = File.AppendText(info.logFile))
         {
-            writer.WriteLine(questname+":"+value.ToString());
+            writer.WriteLine(questname + ":" + value.ToString());
+        }
+    }
+    private void writeAnswer(string questname, float value)
+    {
+
+        using (StreamWriter writer = File.AppendText(info.logFile))
+        {
+            writer.WriteLine(questname + ":" + value.ToString());
+        }
+    }
+    private void writeAnswer(string questname, double value)
+    {
+
+        using (StreamWriter writer = File.AppendText(info.logFile))
+        {
+            writer.WriteLine(questname + ":" + value.ToString());
         }
     }
 }

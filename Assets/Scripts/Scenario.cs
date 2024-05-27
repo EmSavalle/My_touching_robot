@@ -216,6 +216,7 @@ public class Scenario : MonoBehaviour
         if (playScenario)
         {
             playScenario = false;
+            subs = list.Split('_');
             StartCoroutine(PlayScenario());
         }
     }
