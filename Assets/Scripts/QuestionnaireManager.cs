@@ -24,7 +24,8 @@ public class QuestionnaireManager : MonoBehaviour
 
 
         // Add some sample data
-        AddQuestionnaires("How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
+        AddQuestionnaires("S-How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
+        AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
         currentQuestions = -1;
         NextQuestion();
     }
@@ -102,9 +103,40 @@ public class QuestionnaireManager : MonoBehaviour
     }
     public void setQuestion()
     {
-        questionnaire.text = currQuestion;
+        questionnaire.text = currQuestion.Remove(0, 2);
         minanswer.text = currminValue;
         maxanswer.text = currmaxValue;
+        switch(currQuestion.Substring(0, 1))
+        {
+            case "S":
+                foreach(Button b in buttons)
+                {
+                    b.gameObject.SetActive(false);
+                }
+                slider.gameObject.SetActive(true);
+                break;
+            case "B":
+                foreach (Button b in buttons)
+                {
+                    b.gameObject.SetActive(true);
+                }
+                slider.gameObject.SetActive(false);
+                break;
+            case "N":
+                foreach (Button b in buttons)
+                {
+                    b.gameObject.SetActive(false);
+                }
+                slider.gameObject.SetActive(false);
+                break;
+            default:
+                foreach (Button b in buttons)
+                {
+                    b.gameObject.SetActive(false);
+                }
+                slider.gameObject.SetActive(true);
+                break;
+        }
     }
 
     // Function to add button data

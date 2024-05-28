@@ -2,10 +2,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 public class HaNdBack : MonoBehaviour
 {
+    public Infos info;
     public URTest ur;
     public GameObject locationBase;
     public GameObject locationMid;
@@ -17,6 +19,9 @@ public class HaNdBack : MonoBehaviour
     private float lastCol = 0;
     public GameObject alignmentPointAvatar;
     public bool finished;
+
+    private bool pressed = false;
+    private List<bool> results = new List<bool>();
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +37,10 @@ public class HaNdBack : MonoBehaviour
             text.text = "";
         }
         finished = false;
+        if (Input.GetKeyDown("space"))
+        {
+            pressed = true;
+        }
     }
 
     // Update is called once per frame
@@ -67,6 +76,8 @@ public class HaNdBack : MonoBehaviour
     }
     public void nextNback()
     {
+        results.Add(pressed);
+        pressed = false;
         lastCol = Time.time;
         if (currnback < nbacksuite.Count) { 
             int v = nbacksuite[currnback];
@@ -83,6 +94,26 @@ public class HaNdBack : MonoBehaviour
         else
         {
             finished = true;
+            writeAnswer();
+        }
+    }
+    private void writeAnswer()
+    {
+        String value = "";
+        foreach (bool b in results)
+        {
+            if (b)
+            {
+                value = value + "1";
+            }
+            else
+            {
+                value = value + "0";
+            }
+        }
+        using (StreamWriter writer = File.AppendText(info.nbFile))
+        {
+            writer.WriteLine(info.currcond + ":" + value);
         }
     }
     public void setText()

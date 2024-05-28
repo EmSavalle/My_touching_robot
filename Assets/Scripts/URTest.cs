@@ -474,9 +474,13 @@ public bool leapMoved = false;*/
                 }
             }
             handTouchPos = Instantiate(new GameObject("HandTouch"));
+
+            handTouchPos.AddComponent<Rigidbody>();
+            //handTouchPos.AddComponent<BoxCollider>();
+            //handTouchPos.GetComponent<BoxCollider>().isTrigger = true;
         }
         float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) / 2;
-        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.015f;
+        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.02f;
         float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) / 2;
         handTouchPos.transform.position = new Vector3(x, y, z);
     }
@@ -485,7 +489,7 @@ public bool leapMoved = false;*/
         if(handTouchPos != null)
         {
             float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) / 2;
-            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.015f;
+            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.02f;
             float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) / 2;
             handTouchPos.transform.position = new Vector3(x, y, z);
         }
@@ -918,7 +922,7 @@ public bool leapMoved = false;*/
         float noY = -1;
         float lightY = -1;
         float hardY = -1;
-        Vector3 originHover = hoverSpace.transform.position;
+        Vector3 originHover = handTouchPos.transform.position;
         Vector3 targetPos = originHover;
         targetPos.y = currentHeight;
         target.transform.position = targetPos;
@@ -929,8 +933,9 @@ public bool leapMoved = false;*/
             Debug.Log("Going target1");
             yield return new WaitForSeconds(Time.deltaTime);
         }
+        Debug.Log("Calibrating pressure");
 
-        while((noY == -1 || lightY == -1 || hardY == -1) && currentHeight > unsafeYPos)
+        while ((noY == -1 || lightY == -1 || hardY == -1) && currentHeight > unsafeYPos)
         {
             //Return to hover pos
             targetPos = originHover;
