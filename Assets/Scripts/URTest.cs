@@ -169,11 +169,6 @@ public bool leapMoved = false;*/
     void Update()
     {
         updateHandTouchPos();
-        if (testCoroutine)
-        {
-            testCoroutine = false; 
-            StartCoroutine(MoveCoroutine(pCtype, pCphy, 1, pCrec));
-        }
         if (calibrateHand && !calibratingHand)
         {
             if(leftHand == null)
@@ -923,6 +918,7 @@ public bool leapMoved = false;*/
         float lightY = -1;
         float hardY = -1;
         Vector3 originHover = handTouchPos.transform.position;
+        safeSpace.transform.position = new Vector3(hoverSpace.transform.position.x, hoverSpace.transform.position.y, hoverSpace.transform.position.z);
         Vector3 targetPos = originHover;
         targetPos.y = currentHeight;
         target.transform.position = targetPos;
@@ -938,8 +934,7 @@ public bool leapMoved = false;*/
         while ((noY == -1 || lightY == -1 || hardY == -1) && currentHeight > unsafeYPos)
         {
             //Return to hover pos
-            targetPos = originHover;
-            targetPos.y = safeYPos;
+            /*targetPos.y = safeYPos;
             target.transform.position = targetPos;
             move = true;
 
@@ -947,11 +942,10 @@ public bool leapMoved = false;*/
             {
                 Debug.Log("Going hover");
                 yield return new WaitForSeconds(Time.deltaTime);
-            }
+            }*/
 
             //lower target pos and go there
             currentHeight -= 0.002f;
-            targetPos = originHover;
             targetPos.y = currentHeight;
             target.transform.position = targetPos;
             while (!isAtPos(target.transform.position, false))
@@ -962,7 +956,7 @@ public bool leapMoved = false;*/
             //Wait a second and check pressure
             yield return new WaitForSeconds(2);
             List<double> pres = new List<double>() ;
-            for (int r = 0; r < 10; r++)
+            for (int r = 0; r < 20; r++)
             {
                 pres.Add(Fz);
                 yield return new WaitForSeconds(Time.deltaTime);
@@ -973,28 +967,33 @@ public bool leapMoved = false;*/
             {
                 noY = currentHeight;
                 defPos("No");
+                Debug.Log("No pressure : " + pressure.ToString());
             }
-            if(pressure>15 && lightY == -1)
+            if(pressure > 15 && pressure < 20)
             {
                 lightY = currentHeight;
                 defPos("Light");
+                Debug.Log("Light pressure : " + pressure.ToString());
             }
             if(pressure>25 && hardY == -1)
             {
                 hardY = currentHeight;
                 defPos("Hard");
+                Debug.Log("Hard pressure : " + pressure.ToString());
             }
+            Debug.Log("Current pressure : " + pressure.ToString());
         }
-        target.transform.position = originHover;
-        while (!isAtPos(target.transform.position, false))
+        Debug.Log("Determining hover pos");
+        target.transform.position = safeSpace.transform.position;
+        /*while (!isAtPos(target.transform.position, false))
         {
             Debug.Log("Going target2");
             yield return new WaitForSeconds(Time.deltaTime);
-        }
-        Vector3 towardHover = new Vector3(originHover.x, originHover.y + 0.1f, originHover.z);
+        }*/
         yield return new WaitForSeconds(movementTime);
-        hoverSpace.transform.position = new Vector3(alignmentPointRobot.transform.position.x, alignmentPointRobot.transform.position.y, alignmentPointRobot.transform.position.z);
-                
+        hoverSpace.transform.position = new Vector3(actuator.transform.position.x, actuator.transform.position.y, actuator.transform.position.z);
+
+        target.transform.position = hoverSpace.transform.position;
         move = false;
         goHover = true;
         while (!isAtPos(hoverSpace.transform.position, false))

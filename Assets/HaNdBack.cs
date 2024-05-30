@@ -128,16 +128,10 @@ public class HaNdBack : MonoBehaviour
     {
         if (collision.gameObject.tag == "Contact")
         {
-            Debug.Log("Toucn");
             if (hasStarted && Time.time > lastCol + minTimeTouch)
             {
                 nextNback();
             }
-        }
-        else
-        {
-            Debug.Log("Contact");
-            Debug.Log(collision.gameObject.name);
         }
     }
 

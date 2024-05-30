@@ -31,7 +31,7 @@ public class Scenario : MonoBehaviour
     public int cptRecord = 0;
     private bool playingScenario;
     public List<string> recordDone =    new List<string>();
-    private float touchTime = 1;
+    public float touchTime = 0.25f;
     public bool playScenario;
 
 

@@ -17,6 +17,7 @@ public class QuestionnaireManager : MonoBehaviour
     private string currQuestion;
     private string currminValue;
     private string currmaxValue;
+    private string answerType;
     public bool finished;
     // Start is called before the first frame update
     void Start()
@@ -72,9 +73,16 @@ public class QuestionnaireManager : MonoBehaviour
             selected = -1;
             NextQuestion();
         }
-        else if(slider.percentage != -1)
+        else if (slider.percentage != -1)
         {
             writeAnswer(questionnaires[currentQuestions][0], slider.percentage);
+            confirm.reset();
+            slider.reset();
+            selected = -1;
+            NextQuestion();
+        }
+        else if (answerType=="N")
+        {
             confirm.reset();
             slider.reset();
             selected = -1;
@@ -114,6 +122,7 @@ public class QuestionnaireManager : MonoBehaviour
                     b.gameObject.SetActive(false);
                 }
                 slider.gameObject.SetActive(true);
+                answerType = "S";
                 break;
             case "B":
                 foreach (Button b in buttons)
@@ -121,6 +130,7 @@ public class QuestionnaireManager : MonoBehaviour
                     b.gameObject.SetActive(true);
                 }
                 slider.gameObject.SetActive(false);
+                answerType = "B";
                 break;
             case "N":
                 foreach (Button b in buttons)
@@ -128,6 +138,7 @@ public class QuestionnaireManager : MonoBehaviour
                     b.gameObject.SetActive(false);
                 }
                 slider.gameObject.SetActive(false);
+                answerType = "N";
                 break;
             default:
                 foreach (Button b in buttons)
@@ -135,6 +146,7 @@ public class QuestionnaireManager : MonoBehaviour
                     b.gameObject.SetActive(false);
                 }
                 slider.gameObject.SetActive(true);
+                answerType = "S";
                 break;
         }
     }
