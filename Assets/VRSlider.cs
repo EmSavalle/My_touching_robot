@@ -33,7 +33,7 @@ public class VRSlider : MonoBehaviour
         Vector3 point = collision.contacts[0].point;
         if (sphere == null)
         {
-            sphere = Instantiate(spherePrefab, point, Quaternion.identity, gameObject.transform);
+            sphere = Instantiate(spherePrefab, point, Quaternion.identity);
         }
         else
         {
@@ -76,7 +76,7 @@ public class VRSlider : MonoBehaviour
         Vector3 point = collision.contacts[0].point;
         if (sphere == null)
         {
-            sphere = Instantiate(spherePrefab, point, Quaternion.identity, gameObject.transform);
+            sphere = Instantiate(spherePrefab, point, Quaternion.identity);
         }
         else
         {

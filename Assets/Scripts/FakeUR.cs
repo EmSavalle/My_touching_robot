@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class FakeUR : MonoBehaviour
@@ -204,7 +206,22 @@ public class FakeUR : MonoBehaviour
         replaying = false;
         yield break;
     }
+    public static void SaveData(string filePath, List<RobotPositionData> dataList)
+    {
+        string json = JsonConvert.SerializeObject(dataList, Formatting.Indented);
+        File.WriteAllText(filePath, json);
+    }
+    public static List<RobotPositionData> LoadData(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("The specified file was not found", filePath);
+        }
 
+        string json = File.ReadAllText(filePath);
+        List<RobotPositionData> dataList = JsonConvert.DeserializeObject<List<RobotPositionData>>(json);
+        return dataList;
+    }
 
 }
 

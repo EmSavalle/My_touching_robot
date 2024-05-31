@@ -7,6 +7,8 @@ using System;
 using System.Globalization;
 using UnityEngine.XR;
 using System.Linq;
+using System.IO;
+
 public class URTest : MonoBehaviour
 {
 
@@ -14,9 +16,7 @@ public class URTest : MonoBehaviour
     public GameObject robotObject;
     public UR5 robot;
     public FakeUR fake;
-    public bool dupl;
     public GameObject target;
-    public float targetOffsetx, targetOffsety, targetOffsetz;
     public GameObject instTarget;
     public GameObject actuator;
     public GameObject safeSpace;
@@ -39,9 +39,9 @@ public class URTest : MonoBehaviour
      public double unityToRobotZ;*/
 
     [Header("Target Position")]
-    public double npx;
-    public double npy;
-    public double npz;
+    private double npx;
+    private double npy;
+    private double npz;
 
     [Header("Simple move")]
     public GameObject limits;
@@ -50,9 +50,6 @@ public class URTest : MonoBehaviour
 
 
 
-    [Header("Program")]
-    public bool send;
-    public string textprog;
 
     [Header("Teach")]
     private bool isTeaching = false;
@@ -69,7 +66,7 @@ public class URTest : MonoBehaviour
     private bool isLeapAligned = false;
     public bool alignRobot = false;
     private bool isRobotAligned = false;
-    public bool instantiateTarget = false;
+    private bool instantiateTarget = false;
 
     public float tableYOffset = 0f;
     public bool calibrateHand;
@@ -85,15 +82,15 @@ public class URTest : MonoBehaviour
     private bool hassafePos;
     public bool hoverPos;
     private bool hashoverPos;
-    public GameObject noPos, lightPos, hardPos;
-    public Vector3 vnoPos, vlightPos, vhardPos;
-    public bool setnoPos, setlightPos, sethardPos;
+    private GameObject noPos, lightPos, hardPos;
+    private Vector3 vnoPos, vlightPos, vhardPos;
     public bool calibratePressure;
     private bool hasnoPos, haslightPos, hashardPos;
     private bool manualSet = true;
-    public int noPosPressure, lightPosPressure, hardPosPressure;
+    private int noPosPressure, lightPosPressure, hardPosPressure;
     public float safeYPos = 0.85f;
     public float unsafeYPos = 0.6f;
+
     [Header("Alignement params")]
     public GameObject alignment;
     public GameObject alignmentPointRobot;
@@ -110,7 +107,6 @@ public class URTest : MonoBehaviour
 
 
 
-    public float offsetHandx, offsetHandy, offsetHandz;
     public float simulatedOffsetx, simulatedOffsety, simulatedOffsetz;
 
     [Header("Testing coroutine")]
@@ -118,7 +114,6 @@ public class URTest : MonoBehaviour
     public bool movingCoroutine;
     public bool pCphy, pCrec;
     public string pCtype;
-    public bool testCoroutine;
 
     [Header("Forces & speeds")]
     public double Fx;
@@ -283,20 +278,11 @@ public bool leapMoved = false;*/
             {
                 goTo(target, false);
             }
-            if (safePos)
-            {
-                defSafeSpace();
-                safePos = false;
-            }
             if (hoverPos)
             {
                 defHover();
                 hoverPos = false;
                 target.transform.position = hoverSpace.transform.position;
-            }
-            if (goSafe)
-            {
-                safe();
             }
             if (goHover)
             {
@@ -306,7 +292,7 @@ public bool leapMoved = false;*/
 
         if (isTargetInstantiated)
         {
-            target.transform.position = Vector3.Lerp(baseHand.transform.position, baseMiddle.transform.position, 0.5f)+new Vector3(targetOffsetx, targetOffsety, targetOffsetz);
+            target.transform.position = Vector3.Lerp(baseHand.transform.position, baseMiddle.transform.position, 0.5f);
         }
         if (calibratePressure)
         {
@@ -438,9 +424,6 @@ public bool leapMoved = false;*/
 
                 // Calculate the position offset
                 Vector3 offset = alignment.transform.position - actualAlignmentPointLeap.transform.position;
-                offset.x += offsetHandx;
-                offset.y += offsetHandy;
-                offset.z += offsetHandz;
 
                 // Apply the offset to the position
                 go.transform.position += offset;
@@ -509,9 +492,9 @@ public bool leapMoved = false;*/
         double dx, dy, dz;
         if (offset)
         {
-            dx = ((int)((to.x + targetOffsetx) * 1000) / 1000.0);
-            dy = ((int)((to.y + targetOffsety) * 1000) / 1000.0);
-            dz = ((int)((to.z + targetOffsetz) * 1000) / 1000.0);
+            dx = ((int)((to.x) * 1000) / 1000.0);
+            dy = ((int)((to.y) * 1000) / 1000.0);
+            dz = ((int)((to.z) * 1000) / 1000.0);
         }
         else
         {
@@ -614,11 +597,7 @@ public bool leapMoved = false;*/
         goTo(to, false, speed);
     }
 
-    public void defSafeSpace()
-    {
-        safeSpace.transform.position = actuator.transform.position;
-        hassafePos = true;
-    }
+
     public void defHover()
     {
         hoverSpace.transform.position = actuator.transform.position;
@@ -669,20 +648,10 @@ public bool leapMoved = false;*/
         hashoverPos = true;
     }
 
-    public void safe()
-    {
-        move = false;
-        goHover = false;
-        if (hassafePos || manualSet)
-        {
-            Debug.Log("Going to safe space");
-            goTo(safeSpace, false);
-        }
-    }
+
     public void hover()
     {
         move = false;
-        goSafe = false;
         if (hashoverPos || manualSet)
         {
             Debug.Log("Hovering");
@@ -918,7 +887,7 @@ public bool leapMoved = false;*/
         float lightY = -1;
         float hardY = -1;
         Vector3 originHover = handTouchPos.transform.position;
-        safeSpace.transform.position = new Vector3(hoverSpace.transform.position.x, hoverSpace.transform.position.y, hoverSpace.transform.position.z);
+        Vector3 safeSpace = new Vector3(hoverSpace.transform.position.x, hoverSpace.transform.position.y, hoverSpace.transform.position.z);
         Vector3 targetPos = originHover;
         targetPos.y = currentHeight;
         target.transform.position = targetPos;
@@ -984,7 +953,7 @@ public bool leapMoved = false;*/
             Debug.Log("Current pressure : " + pressure.ToString());
         }
         Debug.Log("Determining hover pos");
-        target.transform.position = safeSpace.transform.position;
+        target.transform.position = safeSpace;
         /*while (!isAtPos(target.transform.position, false))
         {
             Debug.Log("Going target2");
@@ -1005,4 +974,64 @@ public bool leapMoved = false;*/
         goHover = false;
         yield break;
     }
+
+    public void savePosition(string filename)
+    {
+        SaveVector3Values(filename,noPos.transform.position, lightPos.transform.position, hardPos.transform.position, hoverSpace.transform.position);
+    }
+
+    public void SaveVector3Values(string filePath, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
+    {
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            WriteVector3(writer, v1);
+            WriteVector3(writer, v2);
+            WriteVector3(writer, v3);
+            WriteVector3(writer, v4);
+        }
+    }
+    private Vector3 ReadVector3(StreamReader reader)
+    {
+        float x = float.Parse(reader.ReadLine());
+        float y = float.Parse(reader.ReadLine());
+        float z = float.Parse(reader.ReadLine());
+
+        return new Vector3(x, y, z);
+    }
+    private void WriteVector3(StreamWriter writer, Vector3 vector)
+    {
+        writer.WriteLine(vector.x);
+        writer.WriteLine(vector.y);
+        writer.WriteLine(vector.z);
+    }
+    public void LoadVector3Values(string filePath)
+    {
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            Vector3 v1 = ReadVector3(reader);
+            if(noPos == null)
+            {
+                noPos = Instantiate(instTarget);
+                noPos.transform.position = v1;
+            }
+            Vector3 v2 = ReadVector3(reader);
+            if (lightPos == null)
+            {
+                lightPos = Instantiate(instTarget);
+                lightPos.transform.position = v1;
+            }
+            Vector3 v3 = ReadVector3(reader);
+            if (hardPos == null)
+            {
+                hardPos = Instantiate(instTarget);
+                hardPos.transform.position = v1;
+            }
+            Vector3 v4 = ReadVector3(reader);
+            hoverSpace.transform.position = v4;
+
+
+        }
+    }
+
+
 }
