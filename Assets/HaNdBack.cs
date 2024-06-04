@@ -74,6 +74,17 @@ public class HaNdBack : MonoBehaviour
         currnback = 0;
         setText();
     }
+    public void stopNBack()
+    {
+        if (!finished)
+        {
+            writeAnswer();
+        }
+        hasStarted = false;
+        finished = true;
+        currnback = 0;
+        setText();
+    }
     public void nextNback()
     {
         results.Add(pressed);

@@ -1,7 +1,9 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class FakeUR : MonoBehaviour
@@ -16,12 +18,14 @@ public class FakeUR : MonoBehaviour
     public List<RobotPositionData> recordedPositionsHard = new List<RobotPositionData>();
     private int currentPositionIndex = 0;
 
+
     public bool recording;
     public bool replay;
     private bool recordingStarted;
     public bool recordingDone;
     public bool replaying;
     public bool replayNo, replayLight, replayHard;
+    public Scenario scenario;
 
     public List<string> recordings = new List<string>();
 
@@ -134,12 +138,12 @@ public class FakeUR : MonoBehaviour
     {
         RobotPositionData data = new RobotPositionData();
         data.timestamp = Time.time;
-        data.jointPositions = new Quaternion[6]; // Replace with your actual joint positions
+        data.jointPositions = new List<Quaternion>(); // Replace with your actual joint positions
 
         // Populate data.jointPositions with the real robot's joint positions
         for (int i = 0; i < 6; i++)
         {
-            data.jointPositions[i]= real.joints[i].localRotation;
+            data.jointPositions.Add(real.joints[i].localRotation);
         }
 
         //Debug.Log("Recording"+","+ recordedPositions.Count.ToString());
@@ -206,21 +210,84 @@ public class FakeUR : MonoBehaviour
         replaying = false;
         yield break;
     }
-    public static void SaveData(string filePath, List<RobotPositionData> dataList)
-    {
-        string json = JsonConvert.SerializeObject(dataList, Formatting.Indented);
-        File.WriteAllText(filePath, json);
-    }
-    public static List<RobotPositionData> LoadData(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException("The specified file was not found", filePath);
-        }
 
-        string json = File.ReadAllText(filePath);
-        List<RobotPositionData> dataList = JsonConvert.DeserializeObject<List<RobotPositionData>>(json);
-        return dataList;
+    public void SaveData(string filePath)
+    {
+        if (filePath.Contains(".txt"))
+        {
+            filePath.Replace(".txt", "");
+        }
+        Save(filePath + "No.txt", recordedPositionsNo);
+        Save(filePath + "Light.txt", recordedPositionsLight);
+        Save(filePath + "Hard.txt", recordedPositionsHard);
+    }
+    public void LoadData(string filePath)
+    {
+        if (filePath.Contains(".txt"))
+        {
+            filePath.Replace(".txt", "");
+        }
+        recordedPositionsNo=Load(filePath + "No.txt");
+        recordedPositionsLight=Load(filePath + "Light.txt");
+        recordedPositionsHard=Load(filePath + "Hard.txt");
+        scenario.recordDone.Add("no");
+        scenario.recordDone.Add("light");
+        scenario.recordDone.Add("hard");
+
+    }
+    public void Save(string filePath, List<RobotPositionData> dataList)
+    {
+        string saveContent = "";
+        foreach (RobotPositionData r in dataList)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+               
+                saveContent = saveContent + r.jointPositions[i].x.ToString() + ";" + r.jointPositions[i].y.ToString() + ";" + r.jointPositions[i].z.ToString() + ";" + r.jointPositions[i].w.ToString()+ ";\n";
+            }
+            
+        }
+        File.WriteAllText(filePath, saveContent);
+    }
+
+    public List<RobotPositionData> Load(string filePath)
+    {
+        List<RobotPositionData> readpos = new List<RobotPositionData>();
+        List<List<float[]>> dataGroups = new List<List<float[]>>();
+        RobotPositionData rr = new RobotPositionData();
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            string line;
+            List<float[]> currentGroup = new List<float[]>();
+            int lineCounter = 0; 
+            List<Quaternion> jointPositions = new List<Quaternion>();
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] values = line.Split(';');
+                values = values.Take(values.Count() - 1).ToArray();
+                float[] floatValues = Array.ConvertAll(values, float.Parse);
+                float w, x, y, z = 0f;
+                x = floatValues[0];
+                y = floatValues[1];
+                z = floatValues[2];
+                w = floatValues[3];
+                Quaternion q = new Quaternion(x, y, z, w);
+                jointPositions.Add(q);
+                lineCounter++;
+
+                if (lineCounter == 6)
+                {
+                    rr = new RobotPositionData();
+                    rr.timestamp = 1;
+                    rr.jointPositions = new List<Quaternion>(jointPositions);
+                    readpos.Add(rr);
+                    jointPositions = new List<Quaternion>();
+                    lineCounter = 0;
+                }
+            }
+
+        }
+        return readpos;
     }
 
 }
@@ -231,7 +298,7 @@ public class FakeUR : MonoBehaviour
 public struct RobotPositionData
 {
     public float timestamp;
-    public Quaternion[] jointPositions;
+    public List<Quaternion> jointPositions;
 }
 
 

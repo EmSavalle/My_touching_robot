@@ -66,7 +66,6 @@ public class URTest : MonoBehaviour
     private bool isLeapAligned = false;
     public bool alignRobot = false;
     private bool isRobotAligned = false;
-    private bool instantiateTarget = false;
 
     public float tableYOffset = 0f;
     public bool calibrateHand;
@@ -141,6 +140,10 @@ public class URTest : MonoBehaviour
     private bool isTargetInstantiated;
 
 
+    [Header("Save Position")]
+    public bool save;
+    public bool load;
+    public string filePos, fileJoints;
 
     [Header("Visualisation")]
     public GameObject robotRig;
@@ -163,6 +166,16 @@ public bool leapMoved = false;*/
     // Update is called once per frame
     void Update()
     {
+        if (save)
+        {
+            save = false;
+            savePosition(filePos, fileJoints);
+        }
+        if (load)
+        {
+            load = false;
+            loadPosition(filePos, fileJoints);
+        }
         updateHandTouchPos();
         if (calibrateHand && !calibratingHand)
         {
@@ -299,21 +312,6 @@ public bool leapMoved = false;*/
             StartCoroutine(DetermineTouchPressure());
             calibratePressure = false;
         }
-        /*if (sethardPos)
-        {
-            sethardPos = false;
-            defPos("Hard");
-        }
-        if (setlightPos)
-        {
-            setlightPos = false;
-            defPos("Light");
-        }
-        if (setnoPos)
-        {
-            setnoPos = false;
-            defPos("No");
-        }*/
 
         if (alignRobot)
         {
@@ -332,16 +330,6 @@ public bool leapMoved = false;*/
             Debug.Log("Aligning Leap");
             align("Leap");
             alignLeap = false;
-        }
-        if (instantiateTarget)
-        {
-            acquireTarget();
-            instantiateTarget = false;
-
-            foreach (GameObject m in movableAvatar)
-            {
-                //Get hand lowest point, set object to that height
-            }
         }
     }
 
@@ -457,18 +445,21 @@ public bool leapMoved = false;*/
             //handTouchPos.AddComponent<BoxCollider>();
             //handTouchPos.GetComponent<BoxCollider>().isTrigger = true;
         }
-        float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) / 2;
-        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.02f;
-        float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) / 2;
+        float t = 0.75f; // This represents the 3/4th point
+        float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) * t;
+        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + 0.02f;
+        float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
+
         handTouchPos.transform.position = new Vector3(x, y, z);
     }
     public void updateHandTouchPos()
     {
         if(handTouchPos != null)
         {
-            float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) / 2;
-            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) / 2+0.02f;
-            float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) / 2;
+            float t = 0.75f; // This represents the 3/4th point
+            float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) * t;
+            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + 0.02f;
+            float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
             handTouchPos.transform.position = new Vector3(x, y, z);
         }
     }
@@ -887,7 +878,7 @@ public bool leapMoved = false;*/
         float lightY = -1;
         float hardY = -1;
         Vector3 originHover = handTouchPos.transform.position;
-        Vector3 safeSpace = new Vector3(hoverSpace.transform.position.x, hoverSpace.transform.position.y, hoverSpace.transform.position.z);
+        Vector3 safeSpace = new Vector3(handTouchPos.transform.position.x, hoverSpace.transform.position.y, handTouchPos.transform.position.z);
         Vector3 targetPos = originHover;
         targetPos.y = currentHeight;
         target.transform.position = targetPos;
@@ -960,7 +951,7 @@ public bool leapMoved = false;*/
             yield return new WaitForSeconds(Time.deltaTime);
         }*/
         yield return new WaitForSeconds(movementTime);
-        hoverSpace.transform.position = new Vector3(actuator.transform.position.x, actuator.transform.position.y, actuator.transform.position.z);
+        hoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, actuator.transform.position.y, handTouchPos.transform.position.z);
 
         target.transform.position = hoverSpace.transform.position;
         move = false;
@@ -975,9 +966,15 @@ public bool leapMoved = false;*/
         yield break;
     }
 
-    public void savePosition(string filename)
+    public void savePosition(string filePos,string fileJoints)
     {
-        SaveVector3Values(filename,noPos.transform.position, lightPos.transform.position, hardPos.transform.position, hoverSpace.transform.position);
+        SaveVector3Values(filePos, noPos.transform.position, lightPos.transform.position, hardPos.transform.position, hoverSpace.transform.position);
+        fake.SaveData(fileJoints);
+    }
+    public void loadPosition(string filePos, string fileJoints)
+    {
+        LoadVector3Values(filePos);
+        fake.LoadData(fileJoints);
     }
 
     public void SaveVector3Values(string filePath, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
@@ -988,6 +985,34 @@ public bool leapMoved = false;*/
             WriteVector3(writer, v2);
             WriteVector3(writer, v3);
             WriteVector3(writer, v4);
+        }
+    }
+    public void LoadVector3Values(string filePath)
+    {
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            Vector3 v1 = ReadVector3(reader);
+            if (noPos == null)
+            {
+                noPos = Instantiate(instTarget);
+                noPos.transform.position = new Vector3(handTouchPos.transform.position.x, v1.y, handTouchPos.transform.position.z);
+            }
+            Vector3 v2 = ReadVector3(reader);
+            if (lightPos == null)
+            {
+                lightPos = Instantiate(instTarget);
+                lightPos.transform.position = new Vector3(handTouchPos.transform.position.x, v2.y, handTouchPos.transform.position.z);
+            }
+            Vector3 v3 = ReadVector3(reader);
+            if (hardPos == null)
+            {
+                hardPos = Instantiate(instTarget);
+                hardPos.transform.position = new Vector3(handTouchPos.transform.position.x, v3.y, handTouchPos.transform.position.z);
+            }
+            Vector3 v4 = ReadVector3(reader);
+            hoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, v4.y, handTouchPos.transform.position.z);
+
+
         }
     }
     private Vector3 ReadVector3(StreamReader reader)
@@ -1004,34 +1029,7 @@ public bool leapMoved = false;*/
         writer.WriteLine(vector.y);
         writer.WriteLine(vector.z);
     }
-    public void LoadVector3Values(string filePath)
-    {
-        using (StreamReader reader = new StreamReader(filePath))
-        {
-            Vector3 v1 = ReadVector3(reader);
-            if(noPos == null)
-            {
-                noPos = Instantiate(instTarget);
-                noPos.transform.position = v1;
-            }
-            Vector3 v2 = ReadVector3(reader);
-            if (lightPos == null)
-            {
-                lightPos = Instantiate(instTarget);
-                lightPos.transform.position = v1;
-            }
-            Vector3 v3 = ReadVector3(reader);
-            if (hardPos == null)
-            {
-                hardPos = Instantiate(instTarget);
-                hardPos.transform.position = v1;
-            }
-            Vector3 v4 = ReadVector3(reader);
-            hoverSpace.transform.position = v4;
 
-
-        }
-    }
 
 
 }

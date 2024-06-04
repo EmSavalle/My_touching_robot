@@ -16,7 +16,7 @@ public class Scenario : MonoBehaviour
     public int cpt = 0;
     private int cptSubs;
     private float lastSeq;
-    bool visu,phy,record;
+    bool visu,phy,record,nb;
     private char touchType;
     public int repetitions;
     public bool replay;
@@ -34,9 +34,12 @@ public class Scenario : MonoBehaviour
     public float touchTime = 0.25f;
     public bool playScenario;
 
+    public HaNdBack nback;
 
     public QuestionnaireManager quest;
     public GameObject questionnaireHolder;
+
+    public List<Trial> conditions;
     // Start is called before the first frame update
     void Start()
     {
@@ -225,36 +228,38 @@ public class Scenario : MonoBehaviour
     {
         string tType = "";
         playingScenario = true;
-        for (int cptSeq = 0; cptSeq < subs.Length; cptSeq++)
+        foreach (Trial t in conditions)
         {
-            Debug.Log("Start seq" + cptSeq.ToString());
+            Debug.Log("Start trial");
             record = false;
 
-            string currentSeq = subs[cptSeq];
 
-            phy = currentSeq[1] == 't';
-            touchType = currentSeq[2];
-            int x1 = currentSeq[currentSeq.Length - 2] - '0';
-            int x2 = currentSeq[currentSeq.Length - 1] - '0';
-            repetitions = 10 * x1 + x2;
-            for (int rep = 0; rep < repetitions; rep ++)
+            phy = t.phy;
+            if(t.touchType == TouchType.Hard)
             {
+                tType = "hard";
+            }
+            else if (t.touchType == TouchType.Light)
+            {
+                tType = "light";
+            }
+            else if (t.touchType == TouchType.No)
+            {
+                tType = "no";
+            }
+            else
+            {
+                tType = "hard";
+            }
 
-                switch (touchType)
-                {
-                    case 'n':
-                        tType = "no";
-                        break;
-                    case 'l':
-                        tType = "light";
-                        break;
-                    case 'h':
-                        tType = "hard";
-                        break;
-                    default:
-                        tType = "light";
-                        break;
-                }
+            nb = t.nb;
+            repetitions = t.repet;
+            if (nb)
+            {
+                nback.startNBack();
+            }
+            for (int rep = 0; rep < repetitions; rep ++)
+            {                
                 if(!recordDone.Contains(tType) && phy)
                 {
                     record = true;
@@ -272,6 +277,11 @@ public class Scenario : MonoBehaviour
                 yield return new WaitForSeconds(delaySeq);
 
             }
+            if (nb)
+            {
+                nback.stopNBack();
+            }
+            
             if (!questionnaireHolder.activeSelf)
             {
                 questionnaireHolder.SetActive(true);
@@ -284,7 +294,85 @@ public class Scenario : MonoBehaviour
             questionnaireHolder.SetActive(false);
 
         }
+
+        if (false)
+        {
+            /* Pré Trial struct
+             * for (int cptSeq = 0; cptSeq < subs.Length; cptSeq++)
+            {
+                Debug.Log("Start seq" + cptSeq.ToString());
+                record = false;
+
+                string currentSeq = subs[cptSeq];
+
+                phy = currentSeq[0] == 't';
+                touchType = currentSeq[1];
+                nb = currentSeq[2] == 't';
+                int x1 = currentSeq[currentSeq.Length - 2] - '0';
+                int x2 = currentSeq[currentSeq.Length - 1] - '0';
+                repetitions = 10 * x1 + x2;
+                switch (touchType)
+                {
+                    case 'n':
+                        tType = "no";
+                        break;
+                    case 'l':
+                        tType = "light";
+                        break;
+                    case 'h':
+                        tType = "hard";
+                        break;
+                    default:
+                        tType = "hard";
+                        break;
+                }
+                nback.startNBack();
+                for (int rep = 0; rep < repetitions; rep++)
+                {
+                    if (!recordDone.Contains(tType) && phy)
+                    {
+                        record = true;
+                    }
+                    manager.StartMovement(tType, phy, touchTime, record);
+                    while (manager.movingCoroutine)
+                    {
+                        yield return new WaitForSeconds(Time.deltaTime);
+                    }
+                    if (record)
+                    {
+                        recordDone.Add(tType);
+                    }
+
+                    yield return new WaitForSeconds(delaySeq);
+
+                }
+                nback.stopNBack();
+                if (!questionnaireHolder.activeSelf)
+                {
+                    questionnaireHolder.SetActive(true);
+                }
+                quest.StartQuestionnaire();
+                while (!quest.finished)
+                {
+                    yield return new WaitForSeconds(Time.deltaTime);
+                }
+                questionnaireHolder.SetActive(false);
+
+            }
+            */
+        }
         playingScenario = false;
         yield break;
     }
 }
+
+
+[System.Serializable]
+public struct Trial
+{
+    public bool phy,nb;
+    public int repet;
+    public TouchType touchType;
+}
+
+public enum TouchType { Hard,Light,No};
