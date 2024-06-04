@@ -8,6 +8,7 @@ using System.Globalization;
 using UnityEngine.XR;
 using System.Linq;
 using System.IO;
+using Leap.Unity;
 
 public class URTest : MonoBehaviour
 {
@@ -75,6 +76,8 @@ public class URTest : MonoBehaviour
 
     [Header("Robot positions")]
     public GameObject handTouchPos;
+    public GameObject prefabHandTouch;
+    public float offsetHandY;
     private GameObject locationBase, locationMid;
 
     public bool safePos;
@@ -166,6 +169,11 @@ public bool leapMoved = false;*/
     // Update is called once per frame
     void Update()
     {
+        /*if(Fz > 50)
+        {
+            UnityEngine.Diagnostics.Utils.ForceCrash(UnityEngine.Diagnostics.ForcedCrashCategory.FatalError);
+            throw new Exception("Too much pressure");
+        }*/
         if (save)
         {
             save = false;
@@ -439,15 +447,12 @@ public bool leapMoved = false;*/
                     locationMid = alignmentPointAvatar.transform.GetChild(i).transform.Find("LeftHand/Tracked Root L Hand/L Hand/CC_Base_L_Middle1").gameObject;
                 }
             }
-            handTouchPos = Instantiate(new GameObject("HandTouch"));
+            handTouchPos = Instantiate(prefabHandTouch);
 
-            handTouchPos.AddComponent<Rigidbody>();
-            //handTouchPos.AddComponent<BoxCollider>();
-            //handTouchPos.GetComponent<BoxCollider>().isTrigger = true;
         }
         float t = 0.75f; // This represents the 3/4th point
         float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) * t;
-        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + 0.02f;
+        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY ;
         float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
 
         handTouchPos.transform.position = new Vector3(x, y, z);
@@ -458,7 +463,7 @@ public bool leapMoved = false;*/
         {
             float t = 0.75f; // This represents the 3/4th point
             float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) * t;
-            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + 0.02f;
+            float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY;
             float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
             handTouchPos.transform.position = new Vector3(x, y, z);
         }
