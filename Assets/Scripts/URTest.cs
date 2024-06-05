@@ -153,6 +153,8 @@ public class URTest : MonoBehaviour
     public GameObject ballRig;
     public GameObject fakeRig;
 
+    [Header("Communication")]
+    public UnityCommunicator comms;
 
 
     /*public bool robotMoved = false;
@@ -339,11 +341,6 @@ public bool leapMoved = false;*/
             align("Leap");
             alignLeap = false;
         }
-    }
-
-    internal void StartMovement(string tType, bool phy, bool v, object touchTime, bool record)
-    {
-        throw new NotImplementedException();
     }
 
     public void align(String mode)
@@ -725,6 +722,15 @@ public bool leapMoved = false;*/
                 yield return new WaitForSeconds((float)0.5);
             }
         }
+        if (physical)
+        {
+            comms.SendMarker(UnityCommunicator.OVMarker.ApproachHaptic);
+        }
+        else
+        {
+            comms.SendMarker(UnityCommunicator.OVMarker.ApproachVisual);
+        }
+        
         //Step 2 : go to touch position
         moveCouroutineStep = "MovingTouch";
         Debug.Log("Coroutine MovingTouch");
@@ -749,7 +755,17 @@ public bool leapMoved = false;*/
                 yield return new WaitForSeconds((float)0.1);
                 robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
             }
+
             Debug.Log("Coroutine Touching");
+
+            if (physical)
+            {
+                comms.SendMarker(UnityCommunicator.OVMarker.TouchHaptic);
+            }
+            else
+            {
+                comms.SendMarker(UnityCommunicator.OVMarker.TouchVisual);
+            }
             moveCouroutineStep = "Touching";
             yield return new WaitForSeconds(touchTime);
 

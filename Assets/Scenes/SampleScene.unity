@@ -6354,6 +6354,71 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 813695584}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &825460507
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 173216, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_Name
+      value: LabStreamingLayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 173216, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.064453125
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.4711914
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.3828125
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458706, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482054, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
+      propertyPath: streamName
+      value: Unity_Touching_Robot
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 341f3d812511a334eb88d59274891c3a, type: 3}
 --- !u!1 &832572082
 GameObject:
   m_ObjectHideFlags: 0
@@ -12015,10 +12080,11 @@ MonoBehaviour:
   nback: {fileID: 2107391827}
   quest: {fileID: 552890790}
   questionnaireHolder: {fileID: 323171988}
+  comms: {fileID: 1725313394}
   conditions:
   - phy: 1
     nb: 0
-    repet: 5
+    repet: 50
     touchType: 0
   - phy: 0
     nb: 0
@@ -13966,6 +14032,7 @@ GameObject:
   - component: {fileID: 1725313390}
   - component: {fileID: 1725313392}
   - component: {fileID: 1725313393}
+  - component: {fileID: 1725313394}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -14056,6 +14123,7 @@ MonoBehaviour:
   robotRig: {fileID: 423838511}
   ballRig: {fileID: 160250646}
   fakeRig: {fileID: 389604734}
+  comms: {fileID: 1725313394}
 --- !u!4 &1725313391
 Transform:
   m_ObjectHideFlags: 0
@@ -14104,6 +14172,22 @@ MonoBehaviour:
   logFile: 
   nbFile: 
   currcond: 
+--- !u!114 &1725313394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725313389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95168639b1590124cbab7e842fc6b668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StreamName: Unity_Touching_Robot
+  StreamType: Markers
+  sample:
+  - 
 --- !u!1 &1725982592
 GameObject:
   m_ObjectHideFlags: 0

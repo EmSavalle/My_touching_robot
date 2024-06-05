@@ -38,6 +38,8 @@ public class Scenario : MonoBehaviour
 
     public QuestionnaireManager quest;
     public GameObject questionnaireHolder;
+    [Header("Communication")]
+    public UnityCommunicator comms;
 
     public List<Trial> conditions;
     // Start is called before the first frame update
@@ -254,6 +256,32 @@ public class Scenario : MonoBehaviour
 
             nb = t.nb;
             repetitions = t.repet;
+            switch (nb)
+            {
+                case true:
+                    switch (phy)
+                    {
+                        case true:
+                            comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackHaptic);
+                            break;
+                        case false:
+                            comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackVisu);
+                            break;
+                    }
+                    break;
+                case false:
+                    switch (phy)
+                    {
+                        case true:
+                            comms.SendMarker(UnityCommunicator.OVMarker.TrialHaptic);
+                            break;
+                        case false:
+                            comms.SendMarker(UnityCommunicator.OVMarker.TrialVisu);
+                            break;
+                    }
+                    break;
+            }
+            Debug.Log("Checking Nback");
             if (nb)
             {
                 nback.startNBack();
@@ -281,7 +309,7 @@ public class Scenario : MonoBehaviour
             {
                 nback.stopNBack();
             }
-            
+            comms.SendMarker(UnityCommunicator.OVMarker.EndOfTrial);
             if (!questionnaireHolder.activeSelf)
             {
                 questionnaireHolder.SetActive(true);
