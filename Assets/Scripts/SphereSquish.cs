@@ -29,7 +29,7 @@ public class SphereSquish : MonoBehaviour
             StopCoroutine(squishCoroutine); // Stop previous coroutine if running
         }
         //squishSpeed = originSquishSpeed;
-        squishCoroutine = StartCoroutine(SquishSmooth(transform.localScale, squishedScale));
+        squishCoroutine = StartCoroutine(SquishSmooth(transform.localScale, squishedScale, squishSpeed));
     }
 
     void ApplyUnsquish()
@@ -40,10 +40,10 @@ public class SphereSquish : MonoBehaviour
             StopCoroutine(squishCoroutine); // Stop previous coroutine if running
         }
         //squishSpeed = originSquishSpeed / 2;
-        squishCoroutine = StartCoroutine(SquishSmooth(transform.localScale, originalScale));
+        squishCoroutine = StartCoroutine(SquishSmooth(transform.localScale, originalScale,squishSpeed/4));
     }
 
-    IEnumerator SquishSmooth(Vector3 startScale, Vector3 targetScale)
+    IEnumerator SquishSmooth(Vector3 startScale, Vector3 targetScale, float squishSpeed)
     {
         float elapsedTime = 0f;
 

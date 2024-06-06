@@ -237,7 +237,19 @@ public class Scenario : MonoBehaviour
 
 
             phy = t.phy;
-            if(t.touchType == TouchType.Hard)
+            if (!phy)
+            {
+                manager.robotRig.SetActive(false);
+                manager.ballRig.GetComponent<MeshRenderer>().enabled = false;
+                manager.fakeRig.SetActive(true);
+            }
+            else
+            {
+                manager.robotRig.SetActive(true);
+                manager.ballRig.GetComponent<MeshRenderer>().enabled = true;
+                manager.fakeRig.SetActive(false);
+            }
+            if (t.touchType == TouchType.Hard)
             {
                 tType = "hard";
             }
@@ -320,6 +332,9 @@ public class Scenario : MonoBehaviour
                 yield return new WaitForSeconds(Time.deltaTime);
             }
             questionnaireHolder.SetActive(false);
+
+            manager.robotRig.SetActive(true);
+            manager.ballRig.GetComponent<MeshRenderer>().enabled = true;
 
         }
 

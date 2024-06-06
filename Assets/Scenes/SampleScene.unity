@@ -906,9 +906,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d3d68496bd9b74fbaaf7dc95c8dc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squishAmount: 0.2
-  squishSpeed: 5
-  minScaleFactor: 0.5
+  squishAmount: 0.5
+  squishSpeed: 1
+  minScaleFactor: 0.7
 --- !u!54 &160250653
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6720,9 +6720,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d3d68496bd9b74fbaaf7dc95c8dc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squishAmount: 0.2
-  squishSpeed: 5
-  minScaleFactor: 0.5
+  squishAmount: 0.5
+  squishSpeed: 1
+  minScaleFactor: 0.7
 --- !u!54 &869398701
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12084,11 +12084,11 @@ MonoBehaviour:
   conditions:
   - phy: 1
     nb: 0
-    repet: 50
+    repet: 40
     touchType: 0
   - phy: 0
     nb: 0
-    repet: 3
+    repet: 40
     touchType: 0
 --- !u!4 &1508426153
 Transform:

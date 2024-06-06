@@ -28,6 +28,23 @@ public class VRSlider : MonoBehaviour
         sphere = null;
         percentage = -1;
     }
+    public void instantiateSelection()
+    {
+        Vector3 pointC = Vector3.Lerp(Left.transform.position, Right.transform.position, 0.5f);
+        sphere = Instantiate(spherePrefab, pointC, Quaternion.identity);
+        percentage = 0.5f;
+
+    }
+    public void changePos(float value)
+    {
+        if(sphere == null)
+        {
+            instantiateSelection();
+        }
+        percentage += value / 20;
+        Vector3 pointC = Vector3.Lerp(Left.transform.position, Right.transform.position, percentage);
+        sphere.transform.position = pointC;
+    }
     void OnCollisionStay(Collision collision)
     {
         Vector3 point = collision.contacts[0].point;

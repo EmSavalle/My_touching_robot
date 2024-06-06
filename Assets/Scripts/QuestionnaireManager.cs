@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class QuestionnaireManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class QuestionnaireManager : MonoBehaviour
     private string currmaxValue;
     private string answerType;
     public bool finished;
+    List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,7 @@ public class QuestionnaireManager : MonoBehaviour
         AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
         currentQuestions = -1;
         NextQuestion();
+        UnityEngine.XR.InputDevices.GetDevices(inputDevices);
     }
     public void StartQuestionnaire()
     {
@@ -57,40 +60,82 @@ public class QuestionnaireManager : MonoBehaviour
             Debug.Log(selected);
             OnValidate();
         }
-    }
+        foreach (var device in inputDevices)
+        {
+            bool triggerValue;
+            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue)
+            {
+                Debug.Log(selected);
+                OnValidate();
+            }
+            // Check if the device has a trackpad
+            bool hasTrackpad = device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 trackpadValue);
 
+            if (hasTrackpad)
+            {
+                // Check if the trackpad button is pressed
+                bool isPressed;
+                if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out isPressed) && isPressed)
+                {
+                    // Determine if pressed on the left or right side
+                    if (trackpadValue.x < 0)
+                    {
+                        Debug.Log("Trackpad pressed on the left side : " + trackpadValue.x.ToString());
+                    }
+                    else
+                    {
+                        Debug.Log("Trackpad pressed on the right side : " + trackpadValue.x.ToString());
+                    }
+                    changeAnswer(trackpadValue.x);
+                }
+            }
+        }
+    }
+    public void changeAnswer(float value)
+    {
+        switch (answerType)
+        {
+            case "S":
+                slider.changePos(value);
+                break;
+        }
+    }
     public void OnValidate()
     {
-        if (selected != -1)
+        if(currentQuestions != -1)
         {
-            writeAnswer(questionnaires[currentQuestions][0], selected);
-            foreach (Button b2 in buttons)
+
+            if (selected != -1)
             {
-                b2.unselected();
+                writeAnswer(questionnaires[currentQuestions][0], selected);
+                foreach (Button b2 in buttons)
+                {
+                    b2.unselected();
+                }
+                confirm.reset();
+                slider.reset();
+                selected = -1;
+                NextQuestion();
             }
-            confirm.reset();
-            slider.reset();
-            selected = -1;
-            NextQuestion();
-        }
-        else if (slider.percentage != -1)
-        {
-            writeAnswer(questionnaires[currentQuestions][0], slider.percentage);
-            confirm.reset();
-            slider.reset();
-            selected = -1;
-            NextQuestion();
-        }
-        else if (answerType=="N")
-        {
-            confirm.reset();
-            slider.reset();
-            selected = -1;
-            NextQuestion();
-        }
-        else
-        {
-            confirm.reset();
+            else if (slider.percentage != -1)
+            {
+                writeAnswer(questionnaires[currentQuestions][0], slider.percentage);
+                confirm.reset();
+                slider.reset();
+                selected = -1;
+                NextQuestion();
+            }
+            else if (answerType=="N")
+            {
+                confirm.reset();
+                slider.reset();
+                selected = -1;
+                NextQuestion();
+            }
+            else
+            {
+                confirm.reset();
+            }
         }
     }
     public void NextQuestion()

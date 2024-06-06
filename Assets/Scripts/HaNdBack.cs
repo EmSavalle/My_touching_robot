@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+
 public class HaNdBack : MonoBehaviour
 {
     public Infos info;
@@ -22,6 +25,9 @@ public class HaNdBack : MonoBehaviour
 
     private bool pressed = false;
     private List<bool> results = new List<bool>();
+    List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
+
+    public XRController rightHand,leftHand;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,15 +43,30 @@ public class HaNdBack : MonoBehaviour
             text.text = "";
         }
         finished = false;
-        if (Input.GetKeyDown("space"))
-        {
-            pressed = true;
-        }
+        
+        UnityEngine.XR.InputDevices.GetDevices(inputDevices);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown("space"))
+        {
+            pressed = true;
+        }
+        if (hasStarted)
+        {
+            foreach (var device in inputDevices)
+            {
+                bool triggerValue;
+                if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue)
+                {
+                    pressed = true;
+                }
+            }
+        }
+
+
         if (locationBase == null)
         {
             
