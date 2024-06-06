@@ -20,6 +20,7 @@ public class QuestionnaireManager : MonoBehaviour
     private string currmaxValue;
     private string answerType;
     public bool finished;
+    private bool preventRepetition = false;
     List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class QuestionnaireManager : MonoBehaviour
 
         // Add some sample data
         AddQuestionnaires("S-How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
+        AddQuestionnaires("S-Test?", "Completely incoherent", "Totally coherent");
         AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
         currentQuestions = -1;
         NextQuestion();
@@ -63,10 +65,15 @@ public class QuestionnaireManager : MonoBehaviour
         foreach (var device in inputDevices)
         {
             bool triggerValue;
-            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue)
+            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue && !preventRepetition)
             {
+                preventRepetition = true;
                 Debug.Log(selected);
                 OnValidate();
+            }
+            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && !triggerValue )
+            {
+                preventRepetition = false;
             }
             // Check if the device has a trackpad
             bool hasTrackpad = device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 trackpadValue);

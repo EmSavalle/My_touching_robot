@@ -62,3 +62,5 @@ S-How coherent were the physical and visual stimulation?:44,52806
 S-How coherent were the physical and visual stimulation?:0
 S-How coherent were the physical and visual stimulation?:58,9524
 S-How coherent were the physical and visual stimulation?:0,434795
+S-How coherent were the physical and visual stimulation?:0,4906643
+S-Test?:0,4218654
