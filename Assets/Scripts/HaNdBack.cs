@@ -23,7 +23,7 @@ public class HaNdBack : MonoBehaviour
     public GameObject alignmentPointAvatar;
     public bool finished;
 
-    private bool pressed = false;
+    public bool pressed = false;
     private List<bool> results = new List<bool>();
     List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
 
@@ -54,17 +54,15 @@ public class HaNdBack : MonoBehaviour
         {
             pressed = true;
         }
-        if (hasStarted)
+        foreach (var device in inputDevices)
         {
-            foreach (var device in inputDevices)
+            bool triggerValue;
+            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue)
             {
-                bool triggerValue;
-                if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue)
-                {
-                    pressed = true;
-                }
+                pressed = true;
             }
         }
+        
 
 
         if (locationBase == null)

@@ -13,20 +13,39 @@ using Leap.Unity;
 public class URTest : MonoBehaviour
 {
 
+    [Header("Save Position")]
+    public bool save;
+    public bool load;
+    public bool saveAlignementData;
+    public bool loadAlignementData;
+    public string filePos, fileJoints, fileAlign;
+    public bool hideScreen;
+    private bool isHided;
 
+
+    [Header("Action")]
+    public bool calibrateHand;
+    public bool calibratePressure;
+    public bool goSafe;
+    public bool goHover;
+    public bool move = false;
+
+
+
+    [Header("Game Objects")]
     public GameObject robotObject;
     public UR5 robot;
     public FakeUR fake;
     public GameObject target;
     public GameObject instTarget;
     public GameObject actuator;
+    public GameObject fakeActuator;
     public GameObject safeSpace;
     public GameObject hoverSpace;
+    public GameObject fakehoverSpace;
+    public GameObject screenHider;
 
 
-    public bool goSafe;
-    public bool goHover;
-    public bool move = false;
     public float movementTime = 1;
 
 
@@ -62,14 +81,11 @@ public class URTest : MonoBehaviour
 
     [Header("Alignement")]
     public bool alignAvatar = false;
-    private bool isAvatarAligned = false;
     public bool alignLeap = false;
     private bool isLeapAligned = false;
     public bool alignRobot = false;
-    private bool isRobotAligned = false;
 
     public float tableYOffset = 0f;
-    public bool calibrateHand;
     private bool calibratingHand = false;
     private GameObject leftHand, rightHand;
 
@@ -86,7 +102,6 @@ public class URTest : MonoBehaviour
     private bool hashoverPos;
     private GameObject noPos, lightPos, hardPos;
     private Vector3 vnoPos, vlightPos, vhardPos;
-    public bool calibratePressure;
     private bool hasnoPos, haslightPos, hashardPos;
     private bool manualSet = true;
     private int noPosPressure, lightPosPressure, hardPosPressure;
@@ -143,10 +158,6 @@ public class URTest : MonoBehaviour
     private bool isTargetInstantiated;
 
 
-    [Header("Save Position")]
-    public bool save;
-    public bool load;
-    public string filePos, fileJoints;
 
     [Header("Visualisation")]
     public GameObject robotRig;
@@ -155,7 +166,9 @@ public class URTest : MonoBehaviour
 
     [Header("Communication")]
     public UnityCommunicator comms;
+    public UnityCommunicatorContinuous commsPressure;
 
+    private Vector3 alignAvatarSave,alignRobotSave, alignLeapSave;
 
     /*public bool robotMoved = false;
 public bool avatarMoved = false;
@@ -171,11 +184,25 @@ public bool leapMoved = false;*/
     // Update is called once per frame
     void Update()
     {
+        if (hideScreen && ! isHided)
+        {
+            screenHider.SetActive(true);
+            isHided = true;
+        }
+        else if (!hideScreen && isHided)
+        {
+            screenHider.SetActive(false);
+            isHided = false;
+        }
         /*if(Fz > 50)
         {
             UnityEngine.Diagnostics.Utils.ForceCrash(UnityEngine.Diagnostics.ForcedCrashCategory.FatalError);
             throw new Exception("Too much pressure");
         }*/
+        if(goHover && isAtPos(hoverSpace))
+        {
+            goHover = false;
+        }
         if (save)
         {
             save = false;
@@ -184,7 +211,17 @@ public bool leapMoved = false;*/
         if (load)
         {
             load = false;
-            loadPosition(filePos, fileJoints);
+            StartCoroutine(loadPosition(filePos, fileJoints));
+        }
+        if (saveAlignementData)
+        {
+            saveAlignementData = false;
+            saveAlignData();
+        }
+        if (loadAlignementData)
+        {
+            loadAlignementData = false;
+            loadAlignData();
         }
         updateHandTouchPos();
         if (calibrateHand && !calibratingHand)
@@ -248,6 +285,7 @@ public bool leapMoved = false;*/
             My = ((int)(forces[4] * 1000) / 1000.0);
             Mz = ((int)(forces[5] * 1000) / 1000.0);
 
+            commsPressure.SendData((float)Fz);
             forces = robot.GetTCPSpeed();
             Sx = ((int)(forces[0] * 1000) / 1000.0);
             Sy = ((int)(forces[1] * 1000) / 1000.0);
@@ -349,12 +387,11 @@ public bool leapMoved = false;*/
         {
             // Move the robot so the tcp object lign up with the physical alignement point
             Vector3 offset = handTouchPos.transform.position - alignmentPointRobot.transform.Find("AlignementPointRobot").transform.position;
-
+            alignRobotSave = offset;
             foreach (GameObject go in movableRobot)
             {
                 go.transform.position += offset;
             }
-            isRobotAligned = true;
 
         }
         /*else if (mode == "Avatar")
@@ -372,7 +409,6 @@ public bool leapMoved = false;*/
             {
                 go.transform.position += offset;
             }
-            isAvatarAligned = true;
 
         }*/
         else if (mode == "AvatarHand" || mode == "Avatar")
@@ -387,11 +423,11 @@ public bool leapMoved = false;*/
             Vector3 offset = alignment.transform.position - actualAlignment.transform.position;
             offset.x = 0;offset.z = 0;
             offset.y += tableYOffset;
+            alignAvatarSave = offset;
             foreach (GameObject go in movableAvatar)
             {
                 go.transform.position -= offset;
             }
-            isAvatarAligned = true;
 
         }
         else if (mode == "Leap")
@@ -410,13 +446,15 @@ public bool leapMoved = false;*/
 
 
            
+            Vector3 offset = alignment.transform.position - actualAlignmentPointLeap.transform.position;
+
+            alignLeapSave = offset;
             foreach (GameObject go in movableLeap)
             {
                 // Rotate the object to align with global forward
                 //go.transform.rotation = targetRotation;
 
                 // Calculate the position offset
-                Vector3 offset = alignment.transform.position - actualAlignmentPointLeap.transform.position;
 
                 // Apply the offset to the position
                 go.transform.position += offset;
@@ -430,6 +468,39 @@ public bool leapMoved = false;*/
             defineHandTouchPos();
         }
     }
+    public void loadAlign(String mode, Vector3 offset)
+    {
+        if (mode == "Robot")
+        {
+            foreach (GameObject go in movableRobot)
+            {
+                go.transform.position += offset;
+            }
+
+        }
+        else if (mode == "AvatarHand" || mode == "Avatar")
+        {
+            foreach (GameObject go in movableAvatar)
+            {
+                go.transform.position -= offset;
+            } 
+
+        }
+        else if (mode == "Leap")
+        {
+            foreach (GameObject go in movableLeap)
+            {
+                // Apply the offset to the position
+                go.transform.position += offset;
+            }
+
+            isLeapAligned = true;
+            // Defining contact point on hand
+            defineHandTouchPos();
+        }
+    }
+
+
     public void defineHandTouchPos()
     {
         if (handTouchPos == null)
@@ -515,17 +586,17 @@ public bool leapMoved = false;*/
         /*npx = ((int)((to.transform.position.x + targetOffsetx) * 1000) / 1000.0);
         npz = ((int)((to.transform.position.y + targetOffsety) * 1000) / 1000.0);
         npy = ((int)((to.transform.position.z + targetOffsetz) * 1000) / 1000.0);*/
-        npx = ((int)((to.transform.position.x) * 1000) / 1000.0);
-        npz = ((int)((to.transform.position.y) * 1000) / 1000.0);
-        npy = ((int)((to.transform.position.z) * 1000) / 1000.0);
+        npx = ((int)((to.transform.position.x) * 100000) / 100000.0);
+        npz = ((int)((to.transform.position.y) * 100000) / 100000.0);
+        npy = ((int)((to.transform.position.z) * 100000) / 100000.0);
 
         Transform transform = robotObject.transform;
         double offsetx = transform.position.x;
         double offsety = transform.position.z;
         double offsetz = transform.position.y;
-        npx = npx - ((int)(offsetx * 1000) / 1000.0);
-        npy = npy - ((int)(offsety * 1000) / 1000.0);
-        npz = npz - ((int)(offsetz * 1000) / 1000.0);
+        npx = npx - ((int)(offsetx * 100000) / 100000.0);
+        npy = npy - ((int)(offsety * 100000) / 100000.0);
+        npz = npz - ((int)(offsetz * 100000) / 100000.0);
         /*double rpx = ((int)(Mathf.Deg2Rad * -1*(target.transform.rotation.eulerAngles.x-180) * 1000) / 1000.0);
         double rpz = ((int)(Mathf.Deg2Rad * target.transform.rotation.eulerAngles.y * 1000) / 1000.0);
         double rpy = ((int)(Mathf.Deg2Rad * target.transform.rotation.eulerAngles.z * 1000) / 1000.0);*/
@@ -594,6 +665,7 @@ public bool leapMoved = false;*/
     public void defHover()
     {
         hoverSpace.transform.position = actuator.transform.position;
+        fakehoverSpace.transform.position = actuator.transform.position;
         hashoverPos = true;
     }
     public void defPos(string pos)
@@ -638,6 +710,7 @@ public bool leapMoved = false;*/
             hashardPos = true;
         }
         hoverSpace.transform.position = actuator.transform.position;
+        fakehoverSpace.transform.position = actuator.transform.position;
         hashoverPos = true;
     }
 
@@ -701,12 +774,12 @@ public bool leapMoved = false;*/
         //Setp 0 : initialisation
         moveCouroutineStep = "Init";
 
-        if (!physical)
+        /*if (!physical)
         {
             robotRig.SetActive(false);
             ballRig.GetComponent<MeshRenderer>().enabled = false;
 
-        }
+        }*/
         Debug.Log("Coroutine intialisation");
 
         //Step 1 : go to original position 
@@ -757,7 +830,10 @@ public bool leapMoved = false;*/
             }
 
             Debug.Log("Coroutine Touching");
-
+            if (record)
+            {
+                fake.sendTouch = true;
+            }
             if (physical)
             {
                 comms.SendMarker(UnityCommunicator.OVMarker.TouchHaptic);
@@ -797,10 +873,10 @@ public bool leapMoved = false;*/
             }
         }
         movingCoroutine = false;
-        robotRig.SetActive(true);
+        /*robotRig.SetActive(true);
         ballRig.GetComponent<MeshRenderer>().enabled = true;
         fakeRig.SetActive(true);
-        robotRig.SetActive(true);
+        robotRig.SetActive(true);*/
         yield break;
     }
     public void StartMovement(string type, bool physical, float touchTime, bool record)
@@ -973,6 +1049,7 @@ public bool leapMoved = false;*/
         }*/
         yield return new WaitForSeconds(movementTime);
         hoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, actuator.transform.position.y, handTouchPos.transform.position.z);
+        fakehoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, actuator.transform.position.y, handTouchPos.transform.position.z);
 
         target.transform.position = hoverSpace.transform.position;
         move = false;
@@ -992,10 +1069,34 @@ public bool leapMoved = false;*/
         SaveVector3Values(filePos, noPos.transform.position, lightPos.transform.position, hardPos.transform.position, hoverSpace.transform.position);
         fake.SaveData(fileJoints);
     }
-    public void loadPosition(string filePos, string fileJoints)
+    public void saveAlignData()
     {
-        LoadVector3Values(filePos);
+        SaveVector3Values(fileAlign, alignLeapSave, alignAvatarSave, alignRobotSave);
+    }
+    public void loadAlignData()
+    {
+        LoadVectorAlign(fileAlign);
+    }
+    public IEnumerator loadPosition(string filePos, string fileJoints)
+    {
+        LoadVector4Values(filePos);
         fake.LoadData(fileJoints);
+        yield return new WaitForSeconds((float)0.1);
+        RobotPositionData r0 = fake.recordedPositionsHard[0];
+        fake.blockMimic = true;
+        for (int i = 0; i < 6; i++)
+        {
+
+            fake.joints[i].localRotation = r0.jointPositions[i];
+        }
+
+        yield return new WaitForSeconds((float)0.1);
+
+        hoverSpace.transform.position = new Vector3(fakeActuator.transform.position.x, fakeActuator.transform.position.y, fakeActuator.transform.position.z);
+        fakehoverSpace.transform.position = new Vector3(fakeActuator.transform.position.x, fakeActuator.transform.position.y, fakeActuator.transform.position.z);
+        yield return new WaitForSeconds((float)0.1);
+        goHover = true;
+        fake.blockMimic = false;
     }
 
     public void SaveVector3Values(string filePath, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
@@ -1008,7 +1109,16 @@ public bool leapMoved = false;*/
             WriteVector3(writer, v4);
         }
     }
-    public void LoadVector3Values(string filePath)
+    public void SaveVector3Values(string filePath, Vector3 v1, Vector3 v2, Vector3 v3)
+    {
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            WriteVector3(writer, v1);
+            WriteVector3(writer, v2);
+            WriteVector3(writer, v3);
+        }
+    }
+    public void LoadVector4Values(string filePath)
     {
         using (StreamReader reader = new StreamReader(filePath))
         {
@@ -1032,8 +1142,21 @@ public bool leapMoved = false;*/
             }
             Vector3 v4 = ReadVector3(reader);
             hoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, v4.y, handTouchPos.transform.position.z);
+            fakehoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, v4.y, handTouchPos.transform.position.z);
 
 
+        }
+    }
+    public void LoadVectorAlign(string filePath)
+    {
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            Vector3 v1 = ReadVector3(reader);
+            loadAlign("Leap", v1);
+            Vector3 v2 = ReadVector3(reader);
+            loadAlign("Avatar", v2);
+            Vector3 v3 = ReadVector3(reader);
+            loadAlign("Robot", v3);
         }
     }
     private Vector3 ReadVector3(StreamReader reader)

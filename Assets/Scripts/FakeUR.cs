@@ -2,13 +2,14 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 
 public class FakeUR : MonoBehaviour
 {
-    Transform[] joints;
+    public Transform[] joints;
     Quaternion[] joints_init;
     public UR5 real;
 
@@ -24,10 +25,14 @@ public class FakeUR : MonoBehaviour
     private bool recordingStarted;
     public bool recordingDone;
     public bool replaying;
+    public bool blockMimic = false;
     public bool replayNo, replayLight, replayHard;
     public Scenario scenario;
+    public UnityCommunicator comms;
 
     public List<string> recordings = new List<string>();
+
+    public bool sendTouch;
 
     private string defaultType = "";
     // Start is called before the first frame update
@@ -73,7 +78,7 @@ public class FakeUR : MonoBehaviour
             replayHard = false;
             ReplayCoroutine("Hard");
         }
-        if (!replaying)
+        if (!replaying && !blockMimic)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -145,9 +150,17 @@ public class FakeUR : MonoBehaviour
         {
             data.jointPositions.Add(real.joints[i].localRotation);
         }
-
+        if (sendTouch)
+        {
+            data.sendTouch = true;
+            sendTouch = false;
+        }
+        else
+        {
+            data.sendTouch = false;
+        }
         //Debug.Log("Recording"+","+ recordedPositions.Count.ToString());
-        if(type == "")
+        if (type == "")
         {
             recordedPositions.Add(data);
         }
@@ -203,7 +216,10 @@ public class FakeUR : MonoBehaviour
                 
                 joints[i].localRotation = rp[currentPositionIndex].jointPositions[i];
             }
-
+            if (rp[currentPositionIndex].sendTouch)
+            {
+                comms.SendMarker(UnityCommunicator.OVMarker.TouchVisual);
+            }
             currentPositionIndex++;
             yield return new WaitForSeconds(Time.deltaTime); // Simulate real-time replay
         }
@@ -243,7 +259,7 @@ public class FakeUR : MonoBehaviour
             for (int i = 0; i < 6; i++)
             {
                
-                saveContent = saveContent + r.jointPositions[i].x.ToString() + ";" + r.jointPositions[i].y.ToString() + ";" + r.jointPositions[i].z.ToString() + ";" + r.jointPositions[i].w.ToString()+ ";\n";
+                saveContent = saveContent + r.jointPositions[i].x.ToString() + ";" + r.jointPositions[i].y.ToString() + ";" + r.jointPositions[i].z.ToString() + ";" + r.jointPositions[i].w.ToString() + ";"+r.sendTouch.ToString()+"\n";
             }
             
         }
@@ -259,14 +275,16 @@ public class FakeUR : MonoBehaviour
         {
             string line;
             List<float[]> currentGroup = new List<float[]>();
-            int lineCounter = 0; 
+            int lineCounter = 0;
+            bool b = false;
             List<Quaternion> jointPositions = new List<Quaternion>();
             while ((line = reader.ReadLine()) != null)
             {
                 string[] values = line.Split(';');
+                b = values[values.Count()].Contains("rue");
                 values = values.Take(values.Count() - 1).ToArray();
                 float[] floatValues = Array.ConvertAll(values, float.Parse);
-                float w, x, y, z = 0f;
+                float w, x, y, z;
                 x = floatValues[0];
                 y = floatValues[1];
                 z = floatValues[2];
@@ -280,6 +298,8 @@ public class FakeUR : MonoBehaviour
                     rr = new RobotPositionData();
                     rr.timestamp = 1;
                     rr.jointPositions = new List<Quaternion>(jointPositions);
+                    rr.sendTouch = b;
+                    b = false;
                     readpos.Add(rr);
                     jointPositions = new List<Quaternion>();
                     lineCounter = 0;
@@ -299,6 +319,7 @@ public struct RobotPositionData
 {
     public float timestamp;
     public List<Quaternion> jointPositions;
+    public bool sendTouch;
 }
 
 

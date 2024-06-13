@@ -21,16 +21,23 @@ public class QuestionnaireManager : MonoBehaviour
     private string answerType;
     public bool finished;
     private bool preventRepetition = false;
+    public bool informations;
     List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
+
+    public float delayAnswer = 0.1f;
+    private float lastResponse;
+
     // Start is called before the first frame update
     void Start()
     {
 
-
-        // Add some sample data
-        AddQuestionnaires("S-How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
-        AddQuestionnaires("S-Test?", "Completely incoherent", "Totally coherent");
-        AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
+        if (!informations)
+        {
+            // Add some sample data
+            AddQuestionnaires("S-How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
+            AddQuestionnaires("B-Test?", "Completely incoherent", "Totally coherent");
+            AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
+        }
         currentQuestions = -1;
         NextQuestion();
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
@@ -100,12 +107,52 @@ public class QuestionnaireManager : MonoBehaviour
     }
     public void changeAnswer(float value)
     {
+
         switch (answerType)
         {
             case "S":
                 slider.changePos(value);
                 break;
-        }
+            case "B":
+                if (lastResponse + delayAnswer < Time.time)
+                {
+                    int currButton = -1;
+                    for (int i = 0; i < buttons.Length; i++)
+                    {
+                        Button b = buttons[i];
+                        if (b.selected)
+                        {
+                            currButton = i;
+                        }
+                    }
+                    if (currButton == -1)
+                    {
+                        buttons[buttons.Length / 2].setSelected();
+                        selected = buttons[buttons.Length / 2].value;
+                        currButton = buttons.Length / 2;
+                    }
+                    if (value < 0)
+                    {
+                        if (currButton > 0)
+                        {
+                            buttons[currButton].unselected();
+                            buttons[currButton-1].setSelected();
+                            selected = buttons[currButton - 1].value;
+                        }
+                    }
+                    else if (value > 0)
+                    {
+                        if (currButton < buttons.Length-1)
+                        {
+                            buttons[currButton].unselected();
+                            buttons[currButton + 1].setSelected();
+                            selected = buttons[currButton + 1].value;
+                        }
+                    }
+                    lastResponse = Time.time;
+                }
+                break;
+            }
     }
     public void OnValidate()
     {
@@ -204,7 +251,7 @@ public class QuestionnaireManager : MonoBehaviour
     }
 
     // Function to add button data
-    private void AddQuestionnaires(string question, string minval, string maxval)
+    public void AddQuestionnaires(string question, string minval, string maxval)
     {
         // Create a new list to hold button data
         List<string> questions = new List<string>();
@@ -214,6 +261,36 @@ public class QuestionnaireManager : MonoBehaviour
 
         // Add the button data to the list
         questionnaires.Add(questions);
+    }
+
+    public void setInformationPannel(bool nb, int nbn)
+    {
+        EmptyQuestionnaires();
+        string text = "";
+        if (nb)
+        {
+            text = "S-Please look at your hand during the trial.\n";
+            text += "a " + nbn.ToString() + "-back task will begin.\n";
+            text += "Please press the trigger if the number displayed is the same as the number seen " + nbn.ToString() + " stimulations ago";
+        }
+        else
+        {
+            text = "N-Please look at your left hand during the trial.\n There are no other task during this trial";
+        }
+        List<string> questions = new List<string>();
+        questions.Add(text);
+        questions.Add("");
+        questions.Add("");
+
+        questionnaires = new List<List<string>>();
+        questionnaires.Add(questions);
+
+    }
+    // Function to add button data
+    public void EmptyQuestionnaires()
+    {
+        // Add the button data to the list
+        questionnaires = new List<List<string>>();
     }
 
     private void writeAnswer(string questname, int value)

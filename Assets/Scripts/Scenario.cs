@@ -16,9 +16,9 @@ public class Scenario : MonoBehaviour
     public int cpt = 0;
     private int cptSubs;
     private float lastSeq;
-    bool visu,phy,record,nb;
+    bool visu,phy,record,nb,questionnaire, information;
     private char touchType;
-    public int repetitions;
+    public int repetitions, nb_number;
     public bool replay;
     public GameObject robotRig;
     public GameObject ballRig;
@@ -37,7 +37,9 @@ public class Scenario : MonoBehaviour
     public HaNdBack nback;
 
     public QuestionnaireManager quest;
+    public QuestionnaireManager informationPannel;
     public GameObject questionnaireHolder;
+    public GameObject informationPannelHolder;
     [Header("Communication")]
     public UnityCommunicator comms;
 
@@ -239,12 +241,14 @@ public class Scenario : MonoBehaviour
             phy = t.phy;
             if (!phy)
             {
+                fake.blockMimic = true;
                 manager.robotRig.SetActive(false);
                 manager.ballRig.GetComponent<MeshRenderer>().enabled = false;
                 manager.fakeRig.SetActive(true);
             }
             else
             {
+                fake.blockMimic = false;
                 manager.robotRig.SetActive(true);
                 manager.ballRig.GetComponent<MeshRenderer>().enabled = true;
                 manager.fakeRig.SetActive(false);
@@ -267,32 +271,64 @@ public class Scenario : MonoBehaviour
             }
 
             nb = t.nb;
+            nb_number = t.nb_number;
             repetitions = t.repet;
-            switch (nb)
+            questionnaire = t.questionnaire;
+            information = t.information;
+            if (nb)
             {
-                case true:
-                    switch (phy)
+                if (phy)
+                {
+                    if (nb_number == 1)
                     {
-                        case true:
-                            comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackHaptic);
-                            break;
-                        case false:
-                            comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackVisu);
-                            break;
+                        comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackHapticLow);
                     }
-                    break;
-                case false:
-                    switch (phy)
+                    else
                     {
-                        case true:
-                            comms.SendMarker(UnityCommunicator.OVMarker.TrialHaptic);
-                            break;
-                        case false:
-                            comms.SendMarker(UnityCommunicator.OVMarker.TrialVisu);
-                            break;
+                        comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackHapticHigh);
                     }
-                    break;
+                }
+                else
+                {
+                    if (nb_number == 1)
+                    {
+                        comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackVisuLow);
+                    }
+                    else
+                    {
+                        comms.SendMarker(UnityCommunicator.OVMarker.TrialNBackVisuHigh);
+                    }
+                }
             }
+            else 
+            { 
+                if (phy)
+                {
+                    comms.SendMarker(UnityCommunicator.OVMarker.TrialHaptic);
+                }
+                else
+                {
+
+                    comms.SendMarker(UnityCommunicator.OVMarker.TrialVisu);
+                }
+            }
+
+            if (information)
+            {
+                if (!informationPannelHolder.activeSelf)
+                {
+                    informationPannelHolder.SetActive(true);
+                }
+                informationPannel.EmptyQuestionnaires();
+                informationPannel.setInformationPannel(nb, nb_number);
+                informationPannel.StartQuestionnaire();
+                while (!informationPannel.finished)
+                {
+                    yield return new WaitForSeconds(Time.deltaTime);
+                }
+                informationPannelHolder.SetActive(false);
+            }
+
             Debug.Log("Checking Nback");
             if (nb)
             {
@@ -322,18 +358,23 @@ public class Scenario : MonoBehaviour
                 nback.stopNBack();
             }
             comms.SendMarker(UnityCommunicator.OVMarker.EndOfTrial);
-            if (!questionnaireHolder.activeSelf)
+            if (questionnaire)
             {
-                questionnaireHolder.SetActive(true);
+                if (!questionnaireHolder.activeSelf)
+                {
+                    questionnaireHolder.SetActive(true);
+                }
+                quest.StartQuestionnaire();
+                while (!quest.finished)
+                {
+                    yield return new WaitForSeconds(Time.deltaTime);
+                }
+                questionnaireHolder.SetActive(false);
             }
-            quest.StartQuestionnaire();
-            while (!quest.finished)
-            {
-                yield return new WaitForSeconds(Time.deltaTime);
-            }
-            questionnaireHolder.SetActive(false);
+            
 
             manager.robotRig.SetActive(true);
+            fake.blockMimic = false;
             manager.ballRig.GetComponent<MeshRenderer>().enabled = true;
 
         }
@@ -413,9 +454,14 @@ public class Scenario : MonoBehaviour
 [System.Serializable]
 public struct Trial
 {
-    public bool phy,nb;
+    public bool phy;
+    public bool nb;
+    public int nb_number;
     public int repet;
     public TouchType touchType;
+    public string name;
+    public bool questionnaire;
+    public bool information;
 }
 
 public enum TouchType { Hard,Light,No};

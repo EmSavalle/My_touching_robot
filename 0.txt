@@ -1,66 +1,93 @@
-How coherent were the physical and visual stimulation?:26,30454
-How coherent were the physical and visual stimulation?:50,77718
-S-How coherent were the physical and visual stimulation?:41,30912
-S-How coherent were the physical and visual stimulation?:35,97002
-S-How coherent were the physical and visual stimulation?:38,63588
-S-How coherent were the physical and visual stimulation?:47,79967
-S-How coherent were the physical and visual stimulation?:41,23085
-S-How coherent were the physical and visual stimulation?:66,42936
-S-How coherent were the physical and visual stimulation?:90,7579
-S-How coherent were the physical and visual stimulation?:78,9378
-S-How coherent were the physical and visual stimulation?:41,84602
-S-How coherent were the physical and visual stimulation?:52,33729
-S-How coherent were the physical and visual stimulation?:52,33159
-S-How coherent were the physical and visual stimulation?:46,64635
-S-How coherent were the physical and visual stimulation?:51,83587
-S-How coherent were the physical and visual stimulation?:45,61235
-S-How coherent were the physical and visual stimulation?:38,10163
-S-How coherent were the physical and visual stimulation?:42,91131
-S-How coherent were the physical and visual stimulation?:41,4366
-S-How coherent were the physical and visual stimulation?:40,67093
-S-How coherent were the physical and visual stimulation?:37,33615
-S-How coherent were the physical and visual stimulation?:32,56941
-S-How coherent were the physical and visual stimulation?:54,75255
-S-How coherent were the physical and visual stimulation?:43,81772
-S-How coherent were the physical and visual stimulation?:82,36911
-S-How coherent were the physical and visual stimulation?:96,44041
-S-How coherent were the physical and visual stimulation?:88,79484
-S-How coherent were the physical and visual stimulation?:80,95429
-S-How coherent were the physical and visual stimulation?:56,76631
-S-How coherent were the physical and visual stimulation?:71,11098
-S-How coherent were the physical and visual stimulation?:50,03883
-S-How coherent were the physical and visual stimulation?:86,12493
-S-How coherent were the physical and visual stimulation?:78,17706
-S-How coherent were the physical and visual stimulation?:36,13475
-S-How coherent were the physical and visual stimulation?:16,44043
-S-How coherent were the physical and visual stimulation?:44,92099
-S-How coherent were the physical and visual stimulation?:68,75568
-S-How coherent were the physical and visual stimulation?:56,40168
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,6316236
+S-Test?:0,6930211
+S-How coherent were the physical and visual stimulation?:0,2579287
+S-Test?:0,08063846
+S-How coherent were the physical and visual stimulation?:0,6150349
+S-Test?:0,7049872
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,7669694
+S-How coherent were the physical and visual stimulation?:0,6537554
+S-Test?:0,8067661
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,7162909
+S-How coherent were the physical and visual stimulation?:0,5140533
+S-Test?:0,7580924
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,7689619
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,6753597
+S-How coherent were the physical and visual stimulation?:0,8006774
+S-Test?:0,7347909
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,7535392
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,6391297
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:11,17167
+S-Test?:11,17428
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,7565365
+S-Test?:0,8385804
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,6413153
+S-Test?:0,04310694
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,2331941
+S-Test?:0,9155066
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,7831584
+S-Test?:0,01514536
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,9968947
+S-Test?:0,1649503
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,6959151
+S-Test?:0,7769701
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
 S-How coherent were the physical and visual stimulation?:0
+S-Test?:0,3057521
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,7767594
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,5960319
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,3466626
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,3527727
+B-Test?:4
 S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:38,54926
-S-How coherent were the physical and visual stimulation?:41,82534
-S-How coherent were the physical and visual stimulation?:36,52099
-S-How coherent were the physical and visual stimulation?:34,19701
-S-How coherent were the physical and visual stimulation?:30,1024
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:61,09853
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:51,25427
-S-How coherent were the physical and visual stimulation?:52,42689
-S-How coherent were the physical and visual stimulation?:53,03372
-S-How coherent were the physical and visual stimulation?:47,76467
-S-How coherent were the physical and visual stimulation?:55,96515
-S-How coherent were the physical and visual stimulation?:44,52806
-S-How coherent were the physical and visual stimulation?:0
-S-How coherent were the physical and visual stimulation?:58,9524
-S-How coherent were the physical and visual stimulation?:0,434795
-S-How coherent were the physical and visual stimulation?:0,4906643
-S-Test?:0,4218654
+B-Test?:4
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,6686307
+B-Test?:2
+S-How coherent were the physical and visual stimulation?:0,6677067
+B-Test?:2
+S-How coherent were the physical and visual stimulation?:0,5385605
+B-Test?:2
