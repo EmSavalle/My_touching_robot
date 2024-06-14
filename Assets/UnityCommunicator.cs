@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LSL;
+using System.IO;
 
 public class UnityCommunicator : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class UnityCommunicator : MonoBehaviour
     public StreamOutlet outlet;
     public string[] sample = { "" };
 
+    public Infos info;
+
+    public bool save;
+    public string saveFileName;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,26 +57,34 @@ public class UnityCommunicator : MonoBehaviour
         convMarkerInt.Add(OVMarker.TouchVisual, 33034);
 
 
+        saveFileName += info.participant.ToString() + ".txt";
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+    public void savePressure(float pressure)
+    {
+        File.AppendAllText(saveFileName, "Markers:" + pressure.ToString() + ":" + Time.time.ToString() + "\n");
+
+    }
+    public void savePressure(string pressure)
+    {
+        File.AppendAllText(saveFileName, "Markers:"+pressure + ":" + Time.time.ToString() + "\n");
+
     }
     public void SendMarker(OVMarker type)
     {
-        Debug.Log("Marker type");
-        Debug.Log(type.ToString());
         int stim = convMarkerInt[type];
-        Debug.Log("Stimulation sent : " + stim.ToString());
+        savePressure(stim);
 
         if (outlet != null)
         {
             sample[0] =stim.ToString();
             outlet.push_sample(sample);
         }
-        Debug.Log("End stimulation sending");
     }
 }
 

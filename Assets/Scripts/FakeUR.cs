@@ -281,7 +281,7 @@ public class FakeUR : MonoBehaviour
             while ((line = reader.ReadLine()) != null)
             {
                 string[] values = line.Split(';');
-                b = values[values.Count()].Contains("rue");
+                b = values[values.Count()-1].Contains("rue");
                 values = values.Take(values.Count() - 1).ToArray();
                 float[] floatValues = Array.ConvertAll(values, float.Parse);
                 float w, x, y, z;

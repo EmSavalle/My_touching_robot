@@ -64,12 +64,12 @@ public class UnityCommunicatorContinuous : MonoBehaviour
     }
     public void savePressure(float pressure)
     {
-        File.AppendAllText(saveFileName, pressure.ToString() + ":" + DateTime.Now.ToString() + "\n");
+        File.AppendAllText(saveFileName, "Pressure:" + pressure.ToString() + ":" + Time.time.ToString() + "\n");
 
     }
     public void savePressure(string pressure)
     {
-        File.AppendAllText(saveFileName, pressure + ":" + DateTime.Now.ToString() + "\n");
+        File.AppendAllText(saveFileName, "Pressure:" + pressure + ":" + Time.time.ToString() + "\n");
 
     }
     public void SendMarker(OVMarker type)
