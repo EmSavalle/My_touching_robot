@@ -1081,6 +1081,7 @@ MonoBehaviour:
   squishAmount: 20
   squishSpeed: 125
   minScaleFactor: 0.8
+  manager: {fileID: 1725313390}
 --- !u!54 &160250653
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4351,6 +4352,7 @@ MonoBehaviour:
   squishAmount: 0.2
   squishSpeed: 5
   minScaleFactor: 0.5
+  manager: {fileID: 0}
 --- !u!1 &469524332
 GameObject:
   m_ObjectHideFlags: 0
@@ -7838,6 +7840,7 @@ MonoBehaviour:
   squishAmount: 20
   squishSpeed: 125
   minScaleFactor: 0.8
+  manager: {fileID: 0}
 --- !u!54 &869398701
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9669,10 +9672,10 @@ RectTransform:
   m_Father: {fileID: 2147123336}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 125, y: -125}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &994443572
 MonoBehaviour:
@@ -10856,6 +10859,7 @@ MonoBehaviour:
   comms: {fileID: 1725313394}
   recordings: []
   sendTouch: 0
+  sendUnTouch: 0
 --- !u!1 &1124452990
 GameObject:
   m_ObjectHideFlags: 0
@@ -13745,7 +13749,7 @@ MonoBehaviour:
   - phy: 1
     nb: 0
     nb_number: 1
-    repet: 50
+    repet: 5
     touchType: 0
     name: NoHaptic
     questionnaire: 0
@@ -13753,7 +13757,7 @@ MonoBehaviour:
   - phy: 0
     nb: 0
     nb_number: 2
-    repet: 50
+    repet: 5
     touchType: 0
     name: NoVisu
     questionnaire: 0
@@ -15788,7 +15792,10 @@ MonoBehaviour:
   alignRobot: 0
   tableYOffset: 0.03
   handTouchPos: {fileID: 0}
+  TouchDetector: {fileID: 0}
   prefabHandTouch: {fileID: 6638232388683087649, guid: 67f687cd188dbf54dbdb297dddc4bb1e,
+    type: 3}
+  prefabTouchDetector: {fileID: 6638232388683087649, guid: 83c41571fa0c1da46a6803307dce923b,
     type: 3}
   offsetHandY: 0.01
   safePos: 0
@@ -15833,6 +15840,8 @@ MonoBehaviour:
   fakeRig: {fileID: 389604734}
   comms: {fileID: 1725313394}
   commsPressure: {fileID: 1725313395}
+  hasTouched: 0
+  hasUnTouched: 0
 --- !u!4 &1725313391
 Transform:
   m_ObjectHideFlags: 0
@@ -17849,32 +17858,32 @@ PrefabInstance:
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -125
       objectReference: {fileID: 0}
     - target: {fileID: 6303954581079108617, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}

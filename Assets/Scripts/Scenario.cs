@@ -16,7 +16,7 @@ public class Scenario : MonoBehaviour
     public int cpt = 0;
     private int cptSubs;
     private float lastSeq;
-    bool visu,phy,record,nb,questionnaire, information;
+    bool visu,phy,record,nb,questionnaire, information,embQ,nasaQ;
     private char touchType;
     public int repetitions, nb_number;
     public bool replay;
@@ -44,6 +44,7 @@ public class Scenario : MonoBehaviour
     public UnityCommunicator comms;
 
     public List<Trial> conditions;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -275,6 +276,8 @@ public class Scenario : MonoBehaviour
             repetitions = t.repet;
             questionnaire = t.questionnaire;
             information = t.information;
+            nasaQ = t.workloadQ;
+            embQ = t.embodimentQ;
             if (nb)
             {
                 if (phy)
@@ -364,6 +367,7 @@ public class Scenario : MonoBehaviour
                 {
                     questionnaireHolder.SetActive(true);
                 }
+                quest.SetupQuestionnaire(embQ, nasaQ);
                 quest.StartQuestionnaire();
                 while (!quest.finished)
                 {
@@ -460,8 +464,10 @@ public struct Trial
     public int repet;
     public TouchType touchType;
     public string name;
-    public bool questionnaire;
     public bool information;
+    public bool questionnaire;
+    public bool embodimentQ;
+    public bool workloadQ;
 }
 
 public enum TouchType { Hard,Light,No};

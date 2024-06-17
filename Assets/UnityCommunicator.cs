@@ -7,7 +7,7 @@ using System.IO;
 
 public class UnityCommunicator : MonoBehaviour
 {
-    public enum OVMarker { ApproachHaptic, ApproachVisual, TouchHaptic, TouchVisual, TrialNBackHapticLow, TrialNBackHapticHigh, TrialHaptic, TrialNBackVisuLow, TrialNBackVisuHigh, TrialVisu, EndOfTrial }
+    public enum OVMarker { ApproachHaptic, ApproachVisual, TouchHaptic,UnTouchHaptic, TouchVisual, UnTouchVisual, TrialNBackHapticLow, TrialNBackHapticHigh, TrialHaptic, TrialNBackVisuLow, TrialNBackVisuHigh, TrialVisu, EndOfTrial }
     public Dictionary<OVMarker, string> convMarkerStr = new Dictionary<OVMarker, string>();
     public Dictionary<OVMarker, int> convMarkerInt = new Dictionary<OVMarker, int>();
 
@@ -53,8 +53,12 @@ public class UnityCommunicator : MonoBehaviour
         convMarkerInt.Add(OVMarker.ApproachVisual, 33032);
         convMarkerStr.Add(OVMarker.TouchHaptic, "OVTK_StimulationId_Label_09");
         convMarkerInt.Add(OVMarker.TouchHaptic, 33033);
-        convMarkerStr.Add(OVMarker.TouchVisual, "OVTK_StimulationId_Label_10");
-        convMarkerInt.Add(OVMarker.TouchVisual, 33034);
+        convMarkerStr.Add(OVMarker.UnTouchHaptic, "OVTK_StimulationId_Label_10");
+        convMarkerInt.Add(OVMarker.UnTouchHaptic, 33034);
+        convMarkerStr.Add(OVMarker.TouchVisual, "OVTK_StimulationId_Label_11");
+        convMarkerInt.Add(OVMarker.TouchVisual, 33035);
+        convMarkerStr.Add(OVMarker.UnTouchVisual, "OVTK_StimulationId_Label_12");
+        convMarkerInt.Add(OVMarker.UnTouchVisual, 33036);
 
 
         saveFileName += info.participant.ToString() + ".txt";

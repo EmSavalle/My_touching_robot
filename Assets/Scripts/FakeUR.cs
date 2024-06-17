@@ -32,7 +32,7 @@ public class FakeUR : MonoBehaviour
 
     public List<string> recordings = new List<string>();
 
-    public bool sendTouch;
+    public bool sendTouch,sendUnTouch;
 
     private string defaultType = "";
     // Start is called before the first frame update
@@ -159,6 +159,15 @@ public class FakeUR : MonoBehaviour
         {
             data.sendTouch = false;
         }
+        if (sendUnTouch)
+        {
+            data.sendUnTouch = true;
+            sendUnTouch = false;
+        }
+        else
+        {
+            data.sendUnTouch = false;
+        }
         //Debug.Log("Recording"+","+ recordedPositions.Count.ToString());
         if (type == "")
         {
@@ -219,6 +228,10 @@ public class FakeUR : MonoBehaviour
             if (rp[currentPositionIndex].sendTouch)
             {
                 comms.SendMarker(UnityCommunicator.OVMarker.TouchVisual);
+            }
+            if (rp[currentPositionIndex].sendUnTouch)
+            {
+                comms.SendMarker(UnityCommunicator.OVMarker.UnTouchVisual);
             }
             currentPositionIndex++;
             yield return new WaitForSeconds(Time.deltaTime); // Simulate real-time replay
@@ -319,7 +332,7 @@ public struct RobotPositionData
 {
     public float timestamp;
     public List<Quaternion> jointPositions;
-    public bool sendTouch;
+    public bool sendTouch, sendUnTouch;
 }
 
 

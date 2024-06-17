@@ -21,12 +21,13 @@ public class HaNdBack : MonoBehaviour
     private float minTimeTouch = 0.5f;
     private float lastCol = 0;
     public GameObject alignmentPointAvatar;
-    public bool finished;
 
     public bool pressed = false;
     private List<bool> results = new List<bool>();
-    List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
+    public List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
 
+
+    public bool finished;
     public XRController rightHand,leftHand;
     // Start is called before the first frame update
     void Start()
@@ -43,7 +44,7 @@ public class HaNdBack : MonoBehaviour
             text.text = "";
         }
         finished = false;
-        
+
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
     }
 
@@ -54,11 +55,17 @@ public class HaNdBack : MonoBehaviour
         {
             pressed = true;
         }
+        Debug.Log("Devices " + inputDevices.Count.ToString());
+        UnityEngine.XR.InputDevices.GetDevices(inputDevices);
+
+        
         foreach (var device in inputDevices)
         {
             bool triggerValue;
+
             if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out triggerValue) && triggerValue)
             {
+                Debug.Log("Trigger pressed n-back");
                 pressed = true;
             }
         }
@@ -145,6 +152,7 @@ public class HaNdBack : MonoBehaviour
         {
             writer.WriteLine(info.currcond + ":" + value);
         }
+        results = new List<bool>();
     }
     public void setText()
     {

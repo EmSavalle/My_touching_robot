@@ -12,6 +12,7 @@ public class SphereSquish : MonoBehaviour
     private Vector3 squishedScale; // Target squished scale
     private Coroutine squishCoroutine; // Reference to the squish coroutine
 
+    public URTest manager;
     void Start()
     {
         // Store the original scale of the sphere
@@ -67,13 +68,28 @@ public class SphereSquish : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name+" touched");
+        if (collision.gameObject.name.Contains("Physical Root L Hand") || collision.gameObject.name.Contains("TouchDetector"))
+        {
+            if(manager != null)
+            {
+                manager.hasTouched = true;
+            }
+            
+        }
         // Apply the squish effect
         ApplySquish();
     }
 
     void OnCollisionExit(Collision collision)
     {
-
+        if (collision.gameObject.name.Contains("Physical Root L Hand") || collision.gameObject.name.Contains("TouchDetector"))
+        {
+            if (manager != null)
+            {
+                manager.hasUnTouched = true;
+            }
+        }
         // Restore the original shape when collision ends
         ApplyUnsquish();
     }

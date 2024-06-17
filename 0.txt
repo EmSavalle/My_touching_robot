@@ -91,3 +91,33 @@ S-How coherent were the physical and visual stimulation?:0,6677067
 B-Test?:2
 S-How coherent were the physical and visual stimulation?:0,5385605
 B-Test?:2
+S-How coherent were the physical and visual stimulation?:0
+B-Test?:4
+N-Please look at your left hand during the trial.
+ There are no other task during this trial:0
+S-How coherent were the physical and visual stimulation?:0,5392101
+B-Test?:4
+S-How coherent were the physical and visual stimulation?:0,7027488
+B-Test?:2
+S-How coherent were the physical and visual stimulation?:7,155199
+B-Test?:1
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,6132223
+S-How coherent were the physical and visual stimulation?:0,4124728
+B-Test?:5
+S-Please look at your hand during the trial.
+a 2-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 2 stimulations ago:0,5001963
+S-How coherent were the physical and visual stimulation?:43,49725
+B-Test?:2
+S-Please look at your hand during the trial.
+a 1-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 1 stimulations ago:0,3065342
+S-How coherent were the physical and visual stimulation?:0,1430932
+B-Test?:4
+S-Please look at your hand during the trial.
+a 2-back task will begin.
+Please press the trigger if the number displayed is the same as the number seen 2 stimulations ago:0,1244286
+S-How coherent were the physical and visual stimulation?:0,2365836
+B-Test?:4

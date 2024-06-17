@@ -92,7 +92,9 @@ public class URTest : MonoBehaviour
 
     [Header("Robot positions")]
     public GameObject handTouchPos;
+    public GameObject TouchDetector;
     public GameObject prefabHandTouch;
+    public GameObject prefabTouchDetector;
     public float offsetHandY;
     private GameObject locationBase, locationMid;
 
@@ -169,6 +171,8 @@ public class URTest : MonoBehaviour
     public UnityCommunicatorContinuous commsPressure;
 
     private Vector3 alignAvatarSave,alignRobotSave, alignLeapSave;
+    public bool hasTouched;
+    public bool hasUnTouched;
 
     /*public bool robotMoved = false;
 public bool avatarMoved = false;
@@ -516,14 +520,17 @@ public bool leapMoved = false;*/
                 }
             }
             handTouchPos = Instantiate(prefabHandTouch);
+            TouchDetector= Instantiate(prefabTouchDetector);
 
         }
         float t = 0.75f; // This represents the 3/4th point
         float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) * t;
-        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY ;
+        float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY;
+        float y2 = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY/2;
         float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
 
         handTouchPos.transform.position = new Vector3(x, y, z);
+        TouchDetector.transform.position = new Vector3(x, y2, z);
     }
     public void updateHandTouchPos()
     {
@@ -532,8 +539,10 @@ public bool leapMoved = false;*/
             float t = 0.75f; // This represents the 3/4th point
             float x = locationBase.transform.position.x + (locationMid.transform.position.x - locationBase.transform.position.x) * t;
             float y = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY;
+            float y2 = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY/2;
             float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
             handTouchPos.transform.position = new Vector3(x, y, z);
+            TouchDetector.transform.position = new Vector3(x, y2, z);
         }
     }
     void RotateRobotsAroundTarget(GameObject robot, GameObject target, float angleY)
@@ -827,21 +836,34 @@ public bool leapMoved = false;*/
 
                 yield return new WaitForSeconds((float)0.1);
                 robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
+                if (hasTouched)
+                {
+                    if (physical)
+                    {
+                        comms.SendMarker(UnityCommunicator.OVMarker.TouchHaptic);
+                    }
+                    else
+                    {
+                        comms.SendMarker(UnityCommunicator.OVMarker.TouchVisual);
+                    }
+                    if (record)
+                    {
+                        fake.sendTouch = true;
+                    }
+                    hasTouched = false;
+                }
+                
             }
 
             Debug.Log("Coroutine Touching");
-            if (record)
-            {
-                fake.sendTouch = true;
-            }
-            if (physical)
+            /*if (physical)
             {
                 comms.SendMarker(UnityCommunicator.OVMarker.TouchHaptic);
             }
             else
             {
                 comms.SendMarker(UnityCommunicator.OVMarker.TouchVisual);
-            }
+            }*/
             moveCouroutineStep = "Touching";
             yield return new WaitForSeconds(touchTime);
 
@@ -854,7 +876,22 @@ public bool leapMoved = false;*/
             while (!isAtPos(hoverSpace, false))
             {
                 if (physical) { hover(); }
-
+                if (hasUnTouched)
+                {
+                    if (physical)
+                    {
+                        comms.SendMarker(UnityCommunicator.OVMarker.UnTouchHaptic);
+                    }
+                    else
+                    {
+                        comms.SendMarker(UnityCommunicator.OVMarker.UnTouchVisual);
+                    }
+                    if (record)
+                    {
+                        fake.sendUnTouch = true;
+                    }
+                    hasUnTouched = false;
+                }
                 yield return new WaitForSeconds((float)0.5);
                 robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
             }
@@ -1026,7 +1063,7 @@ public bool leapMoved = false;*/
                 defPos("No");
                 Debug.Log("No pressure : " + pressure.ToString());
             }
-            if(pressure > 15 && pressure < 20)
+            if(pressure > 15 && pressure < 25)
             {
                 lightY = currentHeight;
                 defPos("Light");

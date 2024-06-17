@@ -42,6 +42,41 @@ public class QuestionnaireManager : MonoBehaviour
         NextQuestion();
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
     }
+    public void SetupQuestionnaire(bool emb, bool nasa)
+    {
+        questionnaires = new List<List<string>>();
+        // Add some sample data
+        if (emb)
+        {
+            AddQuestionnaires("B-I felt out of my body?", "Never", "Always");
+            AddQuestionnaires("B-I felt as if my (real) body were drifting toward the virtual body or as if the virtual body were drifting toward my (real) body", "Never", "Always");
+            AddQuestionnaires("B-I felt as if the movements of the virtual body were influencing my own movements", "Never", "Always");
+            AddQuestionnaires("B-It felt as if my (real) body were turning into an ‘avatar’ body?", "Never", "Always");
+            AddQuestionnaires("B-At some point it felt as if my real body was starting to take on the posture or shape of the virtual body that I saw", "Never", "Always");
+            AddQuestionnaires("B-I felt like I was wearing different clothes from when I came to the laboratory?", "Never", "Always");
+            AddQuestionnaires("B-I felt as if my body had changed", "Never", "Always");
+            AddQuestionnaires("B-I felt a tactile sensation on my hand when I saw the robot touching the virtual hand", "Never", "Always");
+            AddQuestionnaires("B-I felt that my own body could be affected by the robot", "Never", "Always");
+            AddQuestionnaires("B-I felt as if the virtual body was my body", "Never", "Always");
+            AddQuestionnaires("B-At some point it felt that the virtual body resembled my own (real) body, in terms of shape, skin tone or other visual features.", "Never", "Always");
+            AddQuestionnaires("B-I felt as if my body was located where I saw the virtual body", "Never", "Always");
+            AddQuestionnaires("B-I felt like I could control the virtual body as if it was my own body", "Never", "Always");
+            AddQuestionnaires("B-It seemed as if I felt the touch of the robot in the location where I saw the virtual hand touched", "Never", "Always");
+            AddQuestionnaires("B-It seemed as if the touch I felt was caused by the robot touching the virtual hand", "Never", "Always");
+            AddQuestionnaires("B-It seemed as if my hand was touching the virtual table", "Never", "Always");
+        }
+
+        if (nasa)
+        {
+            AddQuestionnaires("B-How mentally demanding was the task?", "Very Low", "Very High");
+            AddQuestionnaires("B-How physically demanding was the task?", "Very Low", "Very High");
+            AddQuestionnaires("B-How hurried or rushed was the pace of the task?", "Very Low", "Very High");
+            AddQuestionnaires("B-How successful were you in accomplishing what you were asked to do?", "Very Low", "Very High");
+            AddQuestionnaires("B-How hard did you have to work to accomplish your level of performance? ", "Very Low", "Very High");
+            AddQuestionnaires("B-How insecure, discouraged, irritated, stressed, and annoyed were you? ", "Very Low", "Very High");
+        }
+        AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
+    }
     public void StartQuestionnaire()
     {
         currentQuestions = -1;
