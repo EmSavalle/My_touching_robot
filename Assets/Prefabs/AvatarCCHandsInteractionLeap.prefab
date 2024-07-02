@@ -2690,7 +2690,7 @@ MonoBehaviour:
           scale: {x: 0, y: 0, z: 0}
         offset:
           position: {x: 0, y: 0, z: 0}
-          rotation: {x: 16, y: 0, z: 0}
+          rotation: {x: 20, y: 0, z: 0}
           scale: {x: 0, y: 0, z: 0}
       - boundTransform: {fileID: 930854804911971288}
         startTransform:
@@ -2699,7 +2699,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 0.99999994}
         offset:
           position: {x: 0, y: 0, z: 0}
-          rotation: {x: 16, y: 0, z: 0}
+          rotation: {x: 20, y: 0, z: 0}
           scale: {x: 0, y: 0, z: 0}
       - boundTransform: {fileID: 930854804086839145}
         startTransform:
@@ -2708,7 +2708,7 @@ MonoBehaviour:
           scale: {x: 0.9999999, y: 0.9999998, z: 0.9999999}
         offset:
           position: {x: 0, y: 0, z: 0}
-          rotation: {x: 16, y: 0, z: 0}
+          rotation: {x: 20, y: 0, z: 0}
           scale: {x: 0, y: 0, z: 0}
       - boundTransform: {fileID: 930854803793593624}
         startTransform:
@@ -2786,7 +2786,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
         offset:
           position: {x: 0, y: 0, z: 0}
-          rotation: {x: 0, y: 0, z: 0}
+          rotation: {x: 16, y: 0, z: 0}
           scale: {x: 0, y: 0, z: 0}
       - boundTransform: {fileID: 930854803958667982}
         startTransform:
@@ -2795,7 +2795,7 @@ MonoBehaviour:
           scale: {x: 1.0000001, y: 1, z: 1.0000001}
         offset:
           position: {x: 0, y: 0, z: 0}
-          rotation: {x: 16, y: 0, z: 0}
+          rotation: {x: 12, y: 0, z: 0}
           scale: {x: 0, y: 0, z: 0}
       fingerTipBaseLength: 0.014252877
       fingerTipScaleOffset: 1
@@ -2829,7 +2829,7 @@ MonoBehaviour:
   SetPositions: 0
   UseMetaBones: 1
   SetModelScale: 0
-  Offsets: 01000000020000000300000005000000060000000700000008000000090000000a0000000b0000000d0000000e0000000f0000001100000013000000
+  Offsets: 01000000020000000300000005000000060000000700000008000000090000000a0000000b0000000d0000000e0000000f000000110000001300000012000000
   DefaultHandPose:
   - transform:
       position: {x: -0.6670533, y: 1.410247, z: -0.064360976}

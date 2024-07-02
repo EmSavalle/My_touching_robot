@@ -175,6 +175,11 @@ public class URTest : MonoBehaviour
     public bool hasUnTouched;
 
     public bool verbose;
+    private bool calibrateRightHand;
+    private bool calibrateElbow;
+    public GameObject elbow;
+    public Vector3 offsetElbow;
+    public Vector3 rightHandPos;
     /*public bool robotMoved = false;
 public bool avatarMoved = false;
 public bool leapMoved = false;*/
@@ -189,6 +194,37 @@ public bool leapMoved = false;*/
     // Update is called once per frame
     void Update()
     {
+        if(rightHand == null)
+        {
+            rightHand = alignmentPointAvatar.transform.Find("AvatarCCHandsInteractionLeap(Clone)/RightHand").gameObject;
+        }
+        if(!calibrateRightHand && rightHand != null)
+        {
+            calibrateRightHand = true;
+            rightHand.SetActive(false);
+            rightHand.transform.position += rightHandPos;
+        }
+        if (elbow == null && !calibrateElbow)
+        {
+            for (int i = 0; i < alignmentPointAvatar.transform.childCount; i++)
+            {
+                GameObject child = alignmentPointAvatar.transform.GetChild(i).gameObject;
+                if (child.name.Contains("Adult_"))
+                {
+                    Debug.Log(child.name);
+                    var x = child.transform.Find("CC_Base_BoneRoot/CC_Base_Hip/CC_Base_Waist/CC_Base_Spine01/CC_Base_Spine02/CC_Base_L_Clavicle");
+                    if (x != null)
+                    {
+                        elbow = x.gameObject;
+                        elbow.transform.position += offsetElbow;
+                        calibrateElbow = true;
+                        break;
+                    }
+
+                }
+            }
+
+        }
         if (hideScreen && ! isHided)
         {
             screenHider.SetActive(true);
