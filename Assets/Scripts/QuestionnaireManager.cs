@@ -31,13 +31,6 @@ public class QuestionnaireManager : MonoBehaviour
     void Start()
     {
 
-        if (!informations)
-        {
-            // Add some sample data
-            AddQuestionnaires("S-How coherent were the physical and visual stimulation?", "Completely incoherent", "Totally coherent");
-            AddQuestionnaires("B-Test?", "Completely incoherent", "Totally coherent");
-            AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
-        }
         currentQuestions = -1;
         NextQuestion();
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
@@ -75,7 +68,7 @@ public class QuestionnaireManager : MonoBehaviour
             AddQuestionnaires("B-How hard did you have to work to accomplish your level of performance? ", "Very Low", "Very High");
             AddQuestionnaires("B-How insecure, discouraged, irritated, stressed, and annoyed were you? ", "Very Low", "Very High");
         }
-        AddQuestionnaires("N-Break Time", "Validate when you are ready", "Take your time");
+        AddQuestionnaires("N-Break Time", "Please place your hand on the indicated position.\nValidate when you are ready to continue", "Take your time");
     }
     public void StartQuestionnaire()
     {
@@ -196,7 +189,10 @@ public class QuestionnaireManager : MonoBehaviour
 
             if (selected != -1)
             {
-                writeAnswer(questionnaires[currentQuestions][0], selected);
+                if (!informations)
+                {
+                    writeAnswer(questionnaires[currentQuestions][0], selected);
+                }
                 foreach (Button b2 in buttons)
                 {
                     b2.unselected();
@@ -208,7 +204,10 @@ public class QuestionnaireManager : MonoBehaviour
             }
             else if (slider.percentage != -1)
             {
-                writeAnswer(questionnaires[currentQuestions][0], slider.percentage);
+                if (!informations)
+                {
+                    writeAnswer(questionnaires[currentQuestions][0], slider.percentage);
+                }
                 confirm.reset();
                 slider.reset();
                 selected = -1;
@@ -304,9 +303,21 @@ public class QuestionnaireManager : MonoBehaviour
         string text = "";
         if (nb)
         {
-            text = "S-Please look at your hand during the trial.\n";
+            text = "N-Please look at your hand during the trial.\n";
             text += "a " + nbn.ToString() + "-back task will begin.\n";
-            text += "Please press the trigger if the number displayed is the same as the number seen " + nbn.ToString() + " stimulations ago";
+            text += "Please press the trigger if the number displayed is the same as the number seen " + nbn.ToString() + " stimulations ago\n";
+            if(nbn == 2)
+            {
+                text += "Example : 5 8 6 2 |6| 1 3 8 |3| 2 6 8\n";
+            }
+            else if (nbn == 1)
+            {
+                text += "Example : 5 6 |6| 1 8 |8| 2 6 8\n";
+            }
+            else if (nbn == 3)
+            {
+                text += "Example : 5 6 8 2 |6| 3 8 2 |3| 2 6 8 |2|\n";
+            }
         }
         else
         {

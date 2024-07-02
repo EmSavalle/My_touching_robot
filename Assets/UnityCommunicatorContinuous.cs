@@ -22,6 +22,8 @@ public class UnityCommunicatorContinuous : MonoBehaviour
     public bool save;
     public string saveFileName;
 
+    public bool loadCheck;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,23 +76,29 @@ public class UnityCommunicatorContinuous : MonoBehaviour
     }
     public void SendMarker(OVMarker type)
     {
-        int stim = convMarkerInt[type];
-
-        if (outlet != null)
+        if (!loadCheck)
         {
-            sample[0] = stim;
-            outlet.push_sample(sample);
-            savePressure(stim);
+            int stim = convMarkerInt[type];
+
+            if (outlet != null)
+            {
+                sample[0] = stim;
+                outlet.push_sample(sample);
+                savePressure(stim);
+            }
         }
+        
     }
     public void SendData(float pressure)
     {
-
-        if (outlet != null)
+        if (!loadCheck)
         {
-            sample[0] = pressure;
-            outlet.push_sample(sample);
-            savePressure(pressure);
+            if (outlet != null)
+            {
+                sample[0] = pressure;
+                outlet.push_sample(sample);
+                savePressure(pressure);
+            }
         }
     }
 }

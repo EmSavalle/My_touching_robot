@@ -24,7 +24,7 @@ public class Scenario : MonoBehaviour
     public GameObject ballRig;
     public GameObject fakeRig;
     private bool waitingInitRecord = false;
-    private float initRecordTime;
+    public float initRecordTime;
     private float recordDelay = 2;
     public float delaySeq;
     private List<string> recordType = new List<string>{ "No", "Light", "Hard" };
@@ -246,6 +246,7 @@ public class Scenario : MonoBehaviour
                 manager.robotRig.SetActive(false);
                 manager.ballRig.GetComponent<MeshRenderer>().enabled = false;
                 manager.fakeRig.SetActive(true);
+                manager.actuator.SetActive(false);
             }
             else
             {
@@ -253,6 +254,7 @@ public class Scenario : MonoBehaviour
                 manager.robotRig.SetActive(true);
                 manager.ballRig.GetComponent<MeshRenderer>().enabled = true;
                 manager.fakeRig.SetActive(false);
+                manager.fakeActuator.SetActive(false);
             }
             if (t.touchType == TouchType.Hard)
             {
@@ -327,33 +329,33 @@ public class Scenario : MonoBehaviour
                 informationPannel.StartQuestionnaire();
                 while (!informationPannel.finished)
                 {
-                    yield return new WaitForSeconds(Time.deltaTime);
+                    yield return new WaitForSecondsRealtime(Time.deltaTime);
                 }
                 informationPannelHolder.SetActive(false);
             }
 
-            Debug.Log("Checking Nback");
+            yield return new WaitForSecondsRealtime(initRecordTime);
             if (nb)
             {
-                nback.startNBack();
+                nback.startNBack(nb_number);
             }
             for (int rep = 0; rep < repetitions; rep ++)
             {                
-                if(!recordDone.Contains(tType) && phy)
+                if(!recordDone.Contains(tType) && phy && rep != 0)
                 {
                     record = true;
                 }
                 manager.StartMovement(tType, phy, touchTime, record);
                 while (manager.movingCoroutine)
                 {
-                    yield return new WaitForSeconds(Time.deltaTime);
+                    yield return new WaitForSecondsRealtime(Time.deltaTime);
                 }
                 if (record)
                 {
                     recordDone.Add(tType);
                 }
 
-                yield return new WaitForSeconds(delaySeq);
+                yield return new WaitForSecondsRealtime(delaySeq);
 
             }
             if (nb)
@@ -363,6 +365,7 @@ public class Scenario : MonoBehaviour
             comms.SendMarker(UnityCommunicator.OVMarker.EndOfTrial);
             if (questionnaire)
             {
+                manager.calibrateHand = false;
                 if (!questionnaireHolder.activeSelf)
                 {
                     questionnaireHolder.SetActive(true);
@@ -371,15 +374,18 @@ public class Scenario : MonoBehaviour
                 quest.StartQuestionnaire();
                 while (!quest.finished)
                 {
-                    yield return new WaitForSeconds(Time.deltaTime);
+                    yield return new WaitForSecondsRealtime(Time.deltaTime);
                 }
                 questionnaireHolder.SetActive(false);
+                manager.calibrateHand = true;
             }
             
 
             manager.robotRig.SetActive(true);
             fake.blockMimic = false;
             manager.ballRig.GetComponent<MeshRenderer>().enabled = true;
+            manager.actuator.SetActive(true);
+            manager.fakeActuator.SetActive(true);
 
         }
 
@@ -424,14 +430,14 @@ public class Scenario : MonoBehaviour
                     manager.StartMovement(tType, phy, touchTime, record);
                     while (manager.movingCoroutine)
                     {
-                        yield return new WaitForSeconds(Time.deltaTime);
+                        yield return new WaitForSecondsRealtime(Time.deltaTime);
                     }
                     if (record)
                     {
                         recordDone.Add(tType);
                     }
 
-                    yield return new WaitForSeconds(delaySeq);
+                    yield return new WaitForSecondsRealtime(delaySeq);
 
                 }
                 nback.stopNBack();
@@ -442,7 +448,7 @@ public class Scenario : MonoBehaviour
                 quest.StartQuestionnaire();
                 while (!quest.finished)
                 {
-                    yield return new WaitForSeconds(Time.deltaTime);
+                    yield return new WaitForSecondsRealtime(Time.deltaTime);
                 }
                 questionnaireHolder.SetActive(false);
 

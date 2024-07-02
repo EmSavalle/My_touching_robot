@@ -62,6 +62,7 @@ public class UnityCommunicator : MonoBehaviour
 
 
         saveFileName += info.participant.ToString() + ".txt";
+        SendMarker(OVMarker.EndOfTrial);
     }
 
     // Update is called once per frame

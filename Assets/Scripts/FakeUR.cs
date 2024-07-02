@@ -115,9 +115,76 @@ public class FakeUR : MonoBehaviour
     }    // Use this function to start recording
     public void StopRecording(string type)
     {
+        RecordRobotPosition(type);
         recordings.Add(type);
         recording = false;
         StopCoroutine(RecordingCoroutine(type));
+        //checkRecording(type);
+    }
+
+    public void checkRecording(string type)
+    {
+        Debug.Log("Checking recording");
+        List<RobotPositionData> check = new List<RobotPositionData>();
+        if (type == "")
+        {
+            check=recordedPositions;
+        }
+        else if (type == "No" || type == "no")
+        {
+            check=recordedPositionsNo;
+        }
+        else if (type == "Light" || type == "light")
+        {
+            check=recordedPositionsLight;
+        }
+        else if (type == "Hard" || type == "hard")
+        {
+            check=recordedPositionsHard;
+        }
+        RobotPositionData last = check[check.Count - 1];
+        int same = -1;
+        bool found = false;
+        for (int i = 0; i < check.Count / 2; i++)
+        {
+            bool x = true;
+            for (int j = 0; j < 6; j++)
+            {
+                if(((int)(last.jointPositions[j].w*1000) != (int)(check[i].jointPositions[j].w*1000)) || ((int)(last.jointPositions[j].x * 1000) != (int)(check[i].jointPositions[j].x * 1000)) || ((int)(last.jointPositions[j].y * 1000) != (int)(check[i].jointPositions[j].y * 1000)) || ((int)(last.jointPositions[j].z * 1000) != (int)(check[i].jointPositions[j].z * 1000)))
+                {
+                    x = false;
+                }
+            }
+            if (x)
+            {
+                found = true;
+                Debug.Log("Found the same !");
+                for (int k = i-1; k < 0; k--)
+                {
+                    if (type == "")
+                    {
+                        recordedPositions.RemoveAt(k);
+                    }
+                    else if (type == "No" || type == "no")
+                    {
+                        recordedPositionsNo.RemoveAt(k);
+                    }
+                    else if (type == "Light" || type == "light")
+                    {
+                        recordedPositionsLight.RemoveAt(k);
+                    }
+                    else if (type == "Hard" || type == "hard")
+                    {
+                        recordedPositionsHard.RemoveAt(k);
+                    }
+                }
+                break;
+            }
+        }
+        if (!found)
+        {
+            Debug.Log("Not found");
+        }
     }
 
     // Use this function to start replaying

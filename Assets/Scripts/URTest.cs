@@ -84,6 +84,7 @@ public class URTest : MonoBehaviour
     public bool alignLeap = false;
     private bool isLeapAligned = false;
     public bool alignRobot = false;
+    public bool hoverPos;
 
     public float tableYOffset = 0f;
     private bool calibratingHand = false;
@@ -100,7 +101,6 @@ public class URTest : MonoBehaviour
 
     public bool safePos;
     private bool hassafePos;
-    public bool hoverPos;
     private bool hashoverPos;
     private GameObject noPos, lightPos, hardPos;
     private Vector3 vnoPos, vlightPos, vhardPos;
@@ -174,6 +174,7 @@ public class URTest : MonoBehaviour
     public bool hasTouched;
     public bool hasUnTouched;
 
+    public bool verbose;
     /*public bool robotMoved = false;
 public bool avatarMoved = false;
 public bool leapMoved = false;*/
@@ -237,6 +238,8 @@ public bool leapMoved = false;*/
             }
             leftHand.SetActive(false);
             calibratingHand = true;
+            handTouchPos.SetActive(true);
+            TouchDetector.SetActive(true);
         }
         else if(calibratingHand && !calibrateHand)
         {
@@ -247,6 +250,8 @@ public bool leapMoved = false;*/
             }
             leftHand.SetActive(true);
             calibratingHand = false;
+            handTouchPos.SetActive(false);
+            TouchDetector.SetActive(false);
         }
         var leftHandDevices = new List<UnityEngine.XR.InputDevice>();
         var rightHandDevices = new List<UnityEngine.XR.InputDevice>();
@@ -321,7 +326,7 @@ public bool leapMoved = false;*/
             
             if (teach && !isTeaching)
             {
-                Debug.Log("Teaching");
+                if (verbose) { Debug.Log("Teaching"); }
                 isTeaching = true;
                 string prog = "";
 
@@ -332,7 +337,10 @@ public bool leapMoved = false;*/
 
             if (!teach && isTeaching)
             {
-                Debug.Log("unTeaching");
+                if (verbose)
+                {
+                    Debug.Log("unTeaching");
+                }
                 isTeaching = false;
                 string prog = "";
                 prog += "end_teach_mode()\n";
@@ -367,19 +375,28 @@ public bool leapMoved = false;*/
 
         if (alignRobot)
         {
-            Debug.Log("Aligning robot");
+            if (verbose)
+            {
+                Debug.Log("Aligning robot");
+            }
             align("Robot");
             alignRobot = false;
         }
         if (alignAvatar)
         {
-            Debug.Log("Aligning Avatar");
+            if (verbose)
+            {
+                Debug.Log("Aligning Avatar");
+            }
             align("Avatar");
             alignAvatar = false;
         }
         if (alignLeap)
         {
-            Debug.Log("Aligning Leap");
+            if (verbose)
+            {
+                Debug.Log("Aligning Leap");
+            }
             align("Leap");
             alignLeap = false;
         }
@@ -420,7 +437,7 @@ public bool leapMoved = false;*/
             // Move the unity scene so the right hand model lign up with the physical alignement point
 
             actualAlignment = alignmentPointAvatar.transform.Find("AvatarCCHandsInteractionLeap(Clone)/LeftHand/Tracked Root L Hand/L Hand/CC_Base_L_Middle1").gameObject;
-            if (actualAlignment == null)
+            if (actualAlignment == null && verbose)
             {
                 Debug.LogError("No left hand found");
             }
@@ -534,6 +551,11 @@ public bool leapMoved = false;*/
     }
     public void updateHandTouchPos()
     {
+        if(!calibrateHand && handTouchPos != null)
+        {
+            handTouchPos.SetActive(false);
+            TouchDetector.SetActive(false);
+        }
         if(handTouchPos != null)
         {
             float t = 0.75f; // This represents the 3/4th point
@@ -651,7 +673,7 @@ public bool leapMoved = false;*/
 
                 }
             }
-            else
+            else if(verbose)
             {
                 Debug.Log("Object outside of limits");
             }
@@ -729,7 +751,10 @@ public bool leapMoved = false;*/
         move = false;
         if (hashoverPos || manualSet)
         {
-            Debug.Log("Hovering");
+            if (verbose)
+            {
+                Debug.Log("Hovering");
+            }
             goTo(hoverSpace, false);
         }
     }
@@ -762,7 +787,10 @@ public bool leapMoved = false;*/
     }
     public IEnumerator MoveCoroutine(string type, bool physical, float touchTime, bool record)
     {
-        Debug.Log("Starting movement coroutine");
+        if (verbose)
+        {
+            Debug.Log("Starting movement coroutine");
+        }
         movingCoroutine = true;
         GameObject target;
         switch (type)
@@ -789,21 +817,29 @@ public bool leapMoved = false;*/
             ballRig.GetComponent<MeshRenderer>().enabled = false;
 
         }*/
-        Debug.Log("Coroutine intialisation");
+        if (verbose)
+        {
+            Debug.Log("Coroutine intialisation");
+        }
 
         //Step 1 : go to original position 
         Vector3 robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y,(float)z));
-        if (!isAtPos(hoverSpace, false))
+        if (verbose)
         {
             Debug.Log("Coroutine hovering");
+        }
+        goHover = true;
+        if (!isAtPos(hoverSpace, false))
+        {
             moveCouroutineStep = "GoingHover"; 
             robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
             while (!isAtPos(hoverSpace, false))
             {
-                hover();
-                yield return new WaitForSeconds((float)0.5);
+                yield return new WaitForSeconds(Time.deltaTime);
             }
         }
+
+        //Step 2 : go to touch position
         if (physical)
         {
             comms.SendMarker(UnityCommunicator.OVMarker.ApproachHaptic);
@@ -812,10 +848,11 @@ public bool leapMoved = false;*/
         {
             comms.SendMarker(UnityCommunicator.OVMarker.ApproachVisual);
         }
-        
-        //Step 2 : go to touch position
         moveCouroutineStep = "MovingTouch";
-        Debug.Log("Coroutine MovingTouch");
+        if (verbose)
+        {
+            Debug.Log("Coroutine MovingTouch");
+        }
         if (!physical)
         {
             fake.StartReplay(type);
@@ -827,13 +864,18 @@ public bool leapMoved = false;*/
                 if((type == "no" && fake.recordedPositionsNo.Count == 0 ) || (type == "light" && fake.recordedPositionsLight.Count == 0) || (type == "hard" && fake.recordedPositionsHard.Count == 0))
                 {
                     fake.StartRecording(type);
+                    yield return new WaitForSeconds(Time.deltaTime);
                 }
             }
             moveCouroutineStep = "Touch";
             while (!isAtPos(target, false))
             {
-                if (physical) { goTo(target); }
 
+                if (verbose)
+                {
+                    Debug.Log("Coroutine Moving to target");
+                }
+                if (physical) { goTo(target); }
                 yield return new WaitForSeconds((float)0.1);
                 robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
                 if (hasTouched)
@@ -852,30 +894,31 @@ public bool leapMoved = false;*/
                     }
                     hasTouched = false;
                 }
-                
-            }
 
-            Debug.Log("Coroutine Touching");
-            /*if (physical)
-            {
-                comms.SendMarker(UnityCommunicator.OVMarker.TouchHaptic);
             }
-            else
+            move = false;
+
+            if (verbose)
             {
-                comms.SendMarker(UnityCommunicator.OVMarker.TouchVisual);
-            }*/
+                Debug.Log("Coroutine Touching");
+            }
             moveCouroutineStep = "Touching";
             yield return new WaitForSeconds(touchTime);
 
             //Step 3 : Go back
 
             moveCouroutineStep = "Backing";
-            Debug.Log("Coroutine Backing");
+            if (verbose)
+            {
+                Debug.Log("Coroutine Backing");
+            }
 
             moveCouroutineStep = "GoingHover"; robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
+            if (physical) {
+                goHover = true;
+            }
             while (!isAtPos(hoverSpace, false))
             {
-                if (physical) { hover(); }
                 if (hasUnTouched)
                 {
                     if (physical)
@@ -892,11 +935,19 @@ public bool leapMoved = false;*/
                     }
                     hasUnTouched = false;
                 }
-                yield return new WaitForSeconds((float)0.5);
+                yield return new WaitForSeconds(Time.deltaTime);
                 robotSpace = transformPosToRobotPosition(new Vector3((float)x, (float)y, (float)z));
             }
             moveCouroutineStep = "Ending";
-            Debug.Log("Coroutine Ending");
+            if (verbose)
+            {
+                Debug.Log("Coroutine Ending");
+            }
+            while (!isAtPos(hoverSpace))
+            {
+                yield return new WaitForSecondsRealtime(Time.deltaTime);
+            }
+            yield return new WaitForSecondsRealtime(0.5f);
             if (record && physical)
             {
                 fake.StopRecording(type);
@@ -906,7 +957,7 @@ public bool leapMoved = false;*/
         {
             while (fake.replaying)
             {
-                yield return new WaitForSeconds(Time.deltaTime);
+                yield return new WaitForSecondsRealtime(Time.deltaTime);
             }
         }
         movingCoroutine = false;
@@ -1020,10 +1071,16 @@ public bool leapMoved = false;*/
 
         while (! isAtPos(target.transform.position, false))
         {
-            Debug.Log("Going target1");
-            yield return new WaitForSeconds(Time.deltaTime);
+            if (verbose)
+            {
+                Debug.Log("Going target1");
+            }
+            yield return new WaitForSecondsRealtime(Time.deltaTime);
         }
-        Debug.Log("Calibrating pressure");
+        if (verbose)
+        {
+            Debug.Log("Calibrating pressure");
+        }
 
         while ((noY == -1 || lightY == -1 || hardY == -1) && currentHeight > unsafeYPos)
         {
@@ -1035,7 +1092,7 @@ public bool leapMoved = false;*/
             while (!isAtPos(target.transform.position, false))
             {
                 Debug.Log("Going hover");
-                yield return new WaitForSeconds(Time.deltaTime);
+                yield return new WaitForSecondsRealtime(Time.deltaTime);
             }*/
 
             //lower target pos and go there
@@ -1044,16 +1101,19 @@ public bool leapMoved = false;*/
             target.transform.position = targetPos;
             while (!isAtPos(target.transform.position, false))
             {
-                Debug.Log("Going target2");
-                yield return new WaitForSeconds(Time.deltaTime);
+                if (verbose)
+                {
+                    Debug.Log("Going target2");
+                }
+                yield return new WaitForSecondsRealtime(Time.deltaTime);
             }
             //Wait a second and check pressure
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSecondsRealtime(2);
             List<double> pres = new List<double>() ;
             for (int r = 0; r < 20; r++)
             {
                 pres.Add(Fz);
-                yield return new WaitForSeconds(Time.deltaTime);
+                yield return new WaitForSecondsRealtime(Time.deltaTime);
             }
             
             pressure = pres.Average();
@@ -1061,30 +1121,45 @@ public bool leapMoved = false;*/
             {
                 noY = currentHeight;
                 defPos("No");
-                Debug.Log("No pressure : " + pressure.ToString());
+                if (verbose)
+                {
+                    Debug.Log("No pressure : " + pressure.ToString());
+                }
             }
             if(pressure > 15 && pressure < 25)
             {
                 lightY = currentHeight;
                 defPos("Light");
-                Debug.Log("Light pressure : " + pressure.ToString());
+                if (verbose)
+                {
+                    Debug.Log("Light pressure : " + pressure.ToString());
+                }
             }
             if(pressure>25 && hardY == -1)
             {
                 hardY = currentHeight;
                 defPos("Hard");
-                Debug.Log("Hard pressure : " + pressure.ToString());
+                if (verbose)
+                {
+                    Debug.Log("Hard pressure : " + pressure.ToString());
+                }
             }
-            Debug.Log("Current pressure : " + pressure.ToString());
+            if (verbose)
+            {
+                Debug.Log("Current pressure : " + pressure.ToString());
+            }
         }
-        Debug.Log("Determining hover pos");
+        if (verbose)
+        {
+            Debug.Log("Determining hover pos");
+        }
         target.transform.position = safeSpace;
         /*while (!isAtPos(target.transform.position, false))
         {
             Debug.Log("Going target2");
-            yield return new WaitForSeconds(Time.deltaTime);
+            yield return new WaitForSecondsRealtime(Time.deltaTime);
         }*/
-        yield return new WaitForSeconds(movementTime);
+        yield return new WaitForSecondsRealtime(movementTime);
         hoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, actuator.transform.position.y, handTouchPos.transform.position.z);
         fakehoverSpace.transform.position = new Vector3(handTouchPos.transform.position.x, actuator.transform.position.y, handTouchPos.transform.position.z);
 
@@ -1093,8 +1168,11 @@ public bool leapMoved = false;*/
         goHover = true;
         while (!isAtPos(hoverSpace.transform.position, false))
         {
-            Debug.Log("Going target2");
-            yield return new WaitForSeconds(Time.deltaTime);
+            if (verbose)
+            {
+                Debug.Log("Going target2");
+            }
+            yield return new WaitForSecondsRealtime(Time.deltaTime);
         }
 
         goHover = false;
@@ -1118,7 +1196,7 @@ public bool leapMoved = false;*/
     {
         LoadVector4Values(filePos);
         fake.LoadData(fileJoints);
-        yield return new WaitForSeconds((float)0.1);
+        yield return new WaitForSecondsRealtime((float)0.1);
         RobotPositionData r0 = fake.recordedPositionsHard[0];
         fake.blockMimic = true;
         for (int i = 0; i < 6; i++)
@@ -1127,13 +1205,26 @@ public bool leapMoved = false;*/
             fake.joints[i].localRotation = r0.jointPositions[i];
         }
 
-        yield return new WaitForSeconds((float)0.1);
+        yield return new WaitForSecondsRealtime((float)0.1);
 
         hoverSpace.transform.position = new Vector3(fakeActuator.transform.position.x, fakeActuator.transform.position.y, fakeActuator.transform.position.z);
         fakehoverSpace.transform.position = new Vector3(fakeActuator.transform.position.x, fakeActuator.transform.position.y, fakeActuator.transform.position.z);
-        yield return new WaitForSeconds((float)0.1);
+        yield return new WaitForSecondsRealtime((float)0.1);
         goHover = true;
         fake.blockMimic = false;
+
+        if (noPos != null)
+        {
+            noPos.transform.position = new Vector3(hoverSpace.transform.position.x, noPos.transform.position.y, hoverSpace.transform.position.z);
+        }
+        if (lightPos != null)
+        {
+            lightPos.transform.position = new Vector3(hoverSpace.transform.position.x, lightPos.transform.position.y, hoverSpace.transform.position.z);
+        }
+        if (hardPos != null)
+        {
+            hardPos.transform.position = new Vector3(hoverSpace.transform.position.x, hardPos.transform.position.y, hoverSpace.transform.position.z);
+        }
     }
 
     public void SaveVector3Values(string filePath, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)

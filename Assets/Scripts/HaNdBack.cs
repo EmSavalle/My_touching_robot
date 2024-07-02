@@ -27,7 +27,11 @@ public class HaNdBack : MonoBehaviour
     public List<UnityEngine.XR.InputDevice> inputDevices = new List<UnityEngine.XR.InputDevice>();
 
     public List<List<int>> listOfNb = new List<List<int>>();
+    public List<List<int>> listOfNb1 = new List<List<int>>();
+    public List<List<int>> listOfNb3 = new List<List<int>>();
     public int numberList = -1;
+    public int numberList1 = -1;
+    public int numberList3 = -1;
     public bool finished;
     public XRController rightHand,leftHand;
     // Start is called before the first frame update
@@ -35,12 +39,23 @@ public class HaNdBack : MonoBehaviour
     {
         listOfNb = new List<List<int>>
         {
-            new List<int> { 3, 7, 2, 2, 5, 2, 2, 6, 1, 1, 7, 7, 7, 7, 2, 4, 4, 5, 5, 8, 9, 9, 9, 9, 8, 8, 8, 9, 9, 9, 5, 8, 7, 1, 9, 7, 9, 9, 9, 4, 9, 2, 8, 2, 9, 1, 3, 5, 6, 3 },
-            new List<int> { 3, 3, 9, 8, 9, 2, 3, 3, 3, 6, 7, 2, 4, 7, 2, 2, 3, 3, 3, 9, 9, 1, 9, 7, 7, 5, 5, 5, 7, 7, 7, 7, 1, 1, 2, 5, 5, 8, 8, 5, 5, 1, 5, 9, 2, 5, 2, 3, 2, 8 },
-            new List<int> { 5, 4, 8, 1, 6, 1, 2, 1, 2, 5, 6, 5, 6, 5, 6, 6, 6, 6, 7, 1, 6, 2, 9, 5, 9, 5, 6, 7, 6, 7, 6, 7, 4, 4, 4, 4, 8, 8, 1, 3, 3, 9, 6, 6, 8, 7, 1, 3, 4, 9 },
-            new List<int> { 6, 4, 3, 3, 1, 2, 1, 8, 3, 5, 3, 9, 4, 9, 4, 9, 1, 6, 4, 6, 4, 4, 3, 6, 8, 3, 8, 3, 3, 9, 7, 9, 7, 9, 4, 9, 4, 9, 8, 7, 1, 3, 8, 4, 8, 4, 2, 7, 7, 9 },
-            new List<int> { 1, 7, 2, 3, 4, 2, 3, 9, 3, 6, 9, 8, 6, 2, 2, 6, 3, 2, 5, 1, 6, 5, 2, 6, 5, 2, 1, 5, 1, 1, 6, 1, 1, 6, 1, 3, 3, 1, 1, 1, 9, 5, 5, 5, 1, 6, 7, 6, 1, 3 },
-            new List<int> { 9, 3, 4, 8, 5, 3, 8, 5, 1, 6, 5, 6, 5, 8, 3, 5, 9, 4, 5, 9, 4, 5, 2, 4, 4, 4, 4, 2, 4, 3, 2, 3, 3, 4, 9, 3, 4, 4, 3, 4, 8, 5, 1, 2, 6, 9, 7, 3, 6, 8 }
+            new List<int> { 4, 4, 2, 6, 8, 1, 9, 7, 1, 1, 1, 1, 8, 3, 3, 9, 9, 9, 9, 6, 6, 3, 3, 8, 4, 4, 2, 7, 7, 7, 8, 4, 1, 3, 7, 3, 3, 2, 7, 4, 4, 4, 3, 3, 9, 2, 3, 2, 4, 5 },
+            new List<int> { 6, 6, 3, 3, 3, 3, 7, 7, 7, 3, 5, 4, 7, 7, 9, 3, 1, 6, 1, 1, 1, 7, 2, 2, 2, 5, 1, 7, 2, 6, 6, 6, 1, 1, 2, 2, 3, 4, 8, 7, 9, 2, 1, 3, 8, 8, 8, 5, 9, 6 },
+            new List<int> { 9, 4, 3, 2, 4, 9, 9, 2, 7, 9, 2, 3, 8, 6, 3, 8, 8, 3, 7, 8, 3, 2, 4, 1, 2, 4, 1, 3, 1, 2, 3, 1, 9, 8, 6, 9, 8, 6, 7, 5, 7, 6, 6, 5, 6, 8, 1, 3, 6, 7 },
+            new List<int> { 7, 1, 3, 8, 6, 8, 8, 6, 5, 2, 6, 4, 1, 6, 5, 1, 6, 5, 1, 1, 5, 8, 8, 5, 8, 9, 2, 8, 2, 8, 7, 7, 5, 7, 7, 8, 7, 1, 4, 4, 6, 5, 4, 6, 4, 5, 1, 1, 7, 6 }
+
+        }; 
+        listOfNb1 = new List<List<int>>
+        {
+            new List<int> { 4, 4, 2, 6, 8, 1, 9, 7, 1, 1, 1, 1, 8, 3, 3, 9, 9, 9, 9, 6, 6, 3, 3, 8, 4, 4, 2, 7, 7, 7, 8, 4, 1, 3, 7, 3, 3, 2, 7, 4, 4, 4, 3, 3, 9, 2, 3, 2, 4, 5 },
+            new List<int> { 6, 6, 3, 3, 3, 3, 7, 7, 7, 3, 5, 4, 7, 7, 9, 3, 1, 6, 1, 1, 1, 7, 2, 2, 2, 5, 1, 7, 2, 6, 6, 6, 1, 1, 2, 2, 3, 4, 8, 7, 9, 2, 1, 3, 8, 8, 8, 5, 9, 6 }
+
+        }; 
+        listOfNb3 = new List<List<int>>
+        {
+            new List<int> { 9, 4, 3, 2, 4, 9, 9, 2, 7, 9, 2, 3, 8, 6, 3, 8, 8, 3, 7, 8, 3, 2, 4, 1, 2, 4, 1, 3, 1, 2, 3, 1, 9, 8, 6, 9, 8, 6, 7, 5, 7, 6, 6, 5, 6, 8, 1, 3, 6, 7 },
+            new List<int> { 7, 1, 3, 8, 6, 8, 8, 6, 5, 2, 6, 4, 1, 6, 5, 1, 6, 5, 1, 1, 5, 8, 8, 5, 8, 9, 2, 8, 2, 8, 7, 7, 5, 7, 7, 8, 7, 1, 4, 4, 6, 5, 4, 6, 4, 5, 1, 1, 7, 6 }
+
         };
 
         if (nbacksuite.Count == 0)
@@ -66,7 +81,6 @@ public class HaNdBack : MonoBehaviour
         {
             pressed = true;
         }
-        Debug.Log("Devices " + inputDevices.Count.ToString());
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
 
         
@@ -108,6 +122,25 @@ public class HaNdBack : MonoBehaviour
     {
         numberList += 1;
         nbacksuite = listOfNb[numberList];
+        hasStarted = true;
+        finished = false;
+        currnback = 0;
+        setText();
+    }
+
+    public void startNBack(int nb_number)
+    {
+        if(nb_number == 1)
+        {
+            numberList1 += 1;
+            nbacksuite = listOfNb1[numberList1];
+        }
+        else
+        {
+
+            numberList3 += 1;
+            nbacksuite = listOfNb3[numberList3];
+        }
         hasStarted = true;
         finished = false;
         currnback = 0;
@@ -191,5 +224,4 @@ public class HaNdBack : MonoBehaviour
 
         // Restore the original shape when collision ends
     }
-
 }
