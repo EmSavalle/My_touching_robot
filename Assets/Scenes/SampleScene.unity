@@ -10178,10 +10178,10 @@ RectTransform:
   m_Father: {fileID: 2147123336}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125, y: -125}
-  m_SizeDelta: {x: 250, y: 250}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &994443572
 MonoBehaviour:
@@ -14689,22 +14689,22 @@ MonoBehaviour:
   informationPannelHolder: {fileID: 63345937}
   comms: {fileID: 1725313394}
   conditions:
-  - phy: 1
-    nb: 0
-    nb_number: 0
-    repet: 50
-    touchType: 0
-    name: NoHaptic
-    information: 1
-    questionnaire: 1
-    embodimentQ: 1
-    workloadQ: 0
   - phy: 0
     nb: 0
     nb_number: 0
     repet: 50
     touchType: 0
     name: NoVisu
+    information: 1
+    questionnaire: 1
+    embodimentQ: 1
+    workloadQ: 0
+  - phy: 1
+    nb: 0
+    nb_number: 0
+    repet: 50
+    touchType: 0
+    name: NoHaptic
     information: 1
     questionnaire: 1
     embodimentQ: 1
@@ -14729,22 +14729,22 @@ MonoBehaviour:
     questionnaire: 1
     embodimentQ: 0
     workloadQ: 1
-  - phy: 1
-    nb: 1
-    nb_number: 3
-    repet: 50
-    touchType: 0
-    name: HighHaptic
-    information: 1
-    questionnaire: 1
-    embodimentQ: 0
-    workloadQ: 1
   - phy: 0
     nb: 1
     nb_number: 3
     repet: 50
     touchType: 0
     name: HighVisu
+    information: 1
+    questionnaire: 1
+    embodimentQ: 0
+    workloadQ: 1
+  - phy: 1
+    nb: 1
+    nb_number: 3
+    repet: 50
+    touchType: 0
+    name: HighHaptic
     information: 1
     questionnaire: 1
     embodimentQ: 0
@@ -18904,32 +18904,32 @@ PrefabInstance:
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 125
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4739467731147492909, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -125
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6303954581079108617, guid: 03172373a3b8a564bb5c6aecfe1d653e,
         type: 3}
