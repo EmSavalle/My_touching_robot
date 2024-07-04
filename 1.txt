@@ -1,32 +1,56 @@
 B-I felt out of my body?:0
-B-I felt as if my (real) body were drifting toward the virtual body or as if the virtual body were drifting toward my (real) body:5
-B-I felt as if the movements of the virtual body were influencing my own movements:4
-B-It felt as if my (real) body were turning into an ‘avatar’ body?:5
-B-At some point it felt as if my real body was starting to take on the posture or shape of the virtual body that I saw:6
-B-I felt like I was wearing different clothes from when I came to the laboratory?:0
-B-I felt as if my body had changed:4
-B-I felt a tactile sensation on my hand when I saw the robot touching the virtual hand:6
-B-I felt that my own body could be affected by the robot:6
-B-I felt as if the virtual body was my body:4
-B-At some point it felt that the virtual body resembled my own (real) body, in terms of shape, skin tone or other visual features.:4
-B-I felt as if my body was located where I saw the virtual body:6
-B-I felt like I could control the virtual body as if it was my own body:5
-B-It seemed as if I felt the touch of the robot in the location where I saw the virtual hand touched:6
-B-It seemed as if the touch I felt was caused by the robot touching the virtual hand:6
-B-It seemed as if my hand was touching the virtual table:4
-B-I felt out of my body?:5
 B-I felt as if my (real) body were drifting toward the virtual body or as if the virtual body were drifting toward my (real) body:1
-B-I felt as if the movements of the virtual body were influencing my own movements:4
-B-It felt as if my (real) body were turning into an ‘avatar’ body?:2
-B-At some point it felt as if my real body was starting to take on the posture or shape of the virtual body that I saw:3
+B-I felt as if the movements of the virtual body were influencing my own movements:1
+B-It felt as if my (real) body were turning into an ‘avatar’ body?:1
+B-At some point it felt as if my real body was starting to take on the posture or shape of the virtual body that I saw:1
 B-I felt like I was wearing different clothes from when I came to the laboratory?:0
 B-I felt as if my body had changed:1
-B-I felt a tactile sensation on my hand when I saw the robot touching the virtual hand:0
-B-I felt that my own body could be affected by the robot:1
-B-I felt as if the virtual body was my body:1
-B-At some point it felt that the virtual body resembled my own (real) body, in terms of shape, skin tone or other visual features.:4
-B-I felt as if my body was located where I saw the virtual body:4
-B-I felt like I could control the virtual body as if it was my own body:4
-B-It seemed as if I felt the touch of the robot in the location where I saw the virtual hand touched:0
-B-It seemed as if the touch I felt was caused by the robot touching the virtual hand:0
+B-I felt a tactile sensation on my hand when I saw the robot touching the virtual hand:5
+B-I felt that my own body could be affected by the robot:6
+B-I felt as if the virtual body was my body:4
+B-At some point it felt that the virtual body resembled my own (real) body, in terms of shape, skin tone or other visual features.:1
+B-I felt as if my body was located where I saw the virtual body:5
+B-I felt like I could control the virtual body as if it was my own body:5
+B-It seemed as if I felt the touch of the robot in the location where I saw the virtual hand touched:5
+B-It seemed as if the touch I felt was caused by the robot touching the virtual hand:5
 B-It seemed as if my hand was touching the virtual table:4
+B-I felt out of my body?:1
+B-I felt as if my (real) body were drifting toward the virtual body or as if the virtual body were drifting toward my (real) body:0
+B-I felt as if the movements of the virtual body were influencing my own movements:1
+B-It felt as if my (real) body were turning into an ‘avatar’ body?:1
+B-At some point it felt as if my real body was starting to take on the posture or shape of the virtual body that I saw:1
+B-I felt like I was wearing different clothes from when I came to the laboratory?:1
+B-I felt as if my body had changed:1
+B-I felt a tactile sensation on my hand when I saw the robot touching the virtual hand:4
+B-I felt that my own body could be affected by the robot:4
+B-I felt as if the virtual body was my body:3
+B-At some point it felt that the virtual body resembled my own (real) body, in terms of shape, skin tone or other visual features.:1
+B-I felt as if my body was located where I saw the virtual body:6
+B-I felt like I could control the virtual body as if it was my own body:4
+B-It seemed as if I felt the touch of the robot in the location where I saw the virtual hand touched:4
+B-It seemed as if the touch I felt was caused by the robot touching the virtual hand:4
+B-It seemed as if my hand was touching the virtual table:4
+B-How mentally demanding was the task?:4
+B-How physically demanding was the task?:0
+B-How hurried or rushed was the pace of the task?:0
+B-How successful were you in accomplishing what you were asked to do?:5
+B-How hard did you have to work to accomplish your level of performance? :4
+B-How insecure, discouraged, irritated, stressed, and annoyed were you? :0
+B-How mentally demanding was the task?:2
+B-How physically demanding was the task?:0
+B-How hurried or rushed was the pace of the task?:0
+B-How successful were you in accomplishing what you were asked to do?:5
+B-How hard did you have to work to accomplish your level of performance? :2
+B-How insecure, discouraged, irritated, stressed, and annoyed were you? :0
+B-How mentally demanding was the task?:6
+B-How physically demanding was the task?:1
+B-How hurried or rushed was the pace of the task?:4
+B-How successful were you in accomplishing what you were asked to do?:1
+B-How hard did you have to work to accomplish your level of performance? :5
+B-How insecure, discouraged, irritated, stressed, and annoyed were you? :4
+B-How mentally demanding was the task?:5
+B-How physically demanding was the task?:0
+B-How hurried or rushed was the pace of the task?:2
+B-How successful were you in accomplishing what you were asked to do?:4
+B-How hard did you have to work to accomplish your level of performance? :4
+B-How insecure, discouraged, irritated, stressed, and annoyed were you? :1

@@ -233,6 +233,7 @@ public class Scenario : MonoBehaviour
     {
         string tType = "";
         playingScenario = true;
+        manager.calibrateHand = true;
         foreach (Trial t in conditions)
         {
             Debug.Log("Start trial");

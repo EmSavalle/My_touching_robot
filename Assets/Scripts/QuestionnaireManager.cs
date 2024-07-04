@@ -68,7 +68,7 @@ public class QuestionnaireManager : MonoBehaviour
             AddQuestionnaires("B-How hard did you have to work to accomplish your level of performance? ", "Very Low", "Very High");
             AddQuestionnaires("B-How insecure, discouraged, irritated, stressed, and annoyed were you? ", "Very Low", "Very High");
         }
-        AddQuestionnaires("N-Break Time", "Please place your hand on the indicated position.\nValidate when you are ready to continue", "Take your time");
+        AddQuestionnaires("N-Break Time\nPlease place your hand on the indicated position and then validate when you are ready to continue", "", "");
     }
     public void StartQuestionnaire()
     {

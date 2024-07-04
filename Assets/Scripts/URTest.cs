@@ -583,7 +583,7 @@ public bool leapMoved = false;*/
         float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
 
         handTouchPos.transform.position = new Vector3(x, y, z);
-        TouchDetector.transform.position = new Vector3(x, y2, z);
+        TouchDetector.transform.position = new Vector3(x, y, z);
     }
     public void updateHandTouchPos()
     {
@@ -600,7 +600,7 @@ public bool leapMoved = false;*/
             float y2 = locationBase.transform.position.y + (locationMid.transform.position.y - locationBase.transform.position.y) * t + offsetHandY/2;
             float z = locationBase.transform.position.z + (locationMid.transform.position.z - locationBase.transform.position.z) * t;
             handTouchPos.transform.position = new Vector3(x, y, z);
-            TouchDetector.transform.position = new Vector3(x, y2, z);
+            TouchDetector.transform.position = new Vector3(x, y, z);
         }
     }
     void RotateRobotsAroundTarget(GameObject robot, GameObject target, float angleY)
