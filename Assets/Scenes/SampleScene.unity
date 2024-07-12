@@ -14709,22 +14709,22 @@ MonoBehaviour:
     questionnaire: 1
     embodimentQ: 1
     workloadQ: 0
-  - phy: 1
-    nb: 1
-    nb_number: 1
-    repet: 50
-    touchType: 0
-    name: LowHaptic
-    information: 1
-    questionnaire: 1
-    embodimentQ: 0
-    workloadQ: 1
   - phy: 0
     nb: 1
     nb_number: 1
     repet: 50
     touchType: 0
     name: LowVisu
+    information: 1
+    questionnaire: 1
+    embodimentQ: 0
+    workloadQ: 1
+  - phy: 1
+    nb: 1
+    nb_number: 1
+    repet: 50
+    touchType: 0
+    name: LowHaptic
     information: 1
     questionnaire: 1
     embodimentQ: 0
@@ -16776,7 +16776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11110e75a0cf9f349b005a835a7a97e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  participant: 1
+  participant: 8
   logFile: 
   nbFile: 
   currcond: 
@@ -21422,8 +21422,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.11567791, z: 0.1}
-  m_Center: {x: 0, y: 0.03783896, z: 0}
+  m_Size: {x: 0.1, y: 0.094707295, z: 0.1}
+  m_Center: {x: 0, y: 0.027353652, z: 0}
 --- !u!1 &2108277692
 GameObject:
   m_ObjectHideFlags: 0
